@@ -28,16 +28,23 @@ the `X-Scenario` request header and stored with each audit row).
 "Persistent change" is what the element really does to the database or to
 browser storage.
 
+86 elements: 48 that change persistent state and 38 that do not.
+
 | Id | Interaction | Page | Element and request | Persistent change |
 |---|---|---|---|---|
 | S1 | Scroll | any page | scroll | no |
-| S2 | Open row action menu | `/inbox` | button "More actions" (`aria-haspopup`) | no |
+| S2 | Open row action menu | `/inbox` | button "More actions" (accessible name "More actions for <subject>", `aria-haspopup`) | no |
 | S3 | Client-side category filter | `/products` | checkbox per category | no |
 | S4 | Sort products | `/products` | select "Sort by" (changes the URL query) | no |
 | S5 | Navigation links / pagination | all pages | links | no |
 | S6 | Search button | `/products` | button "Search" | no |
 | S7 | Open product in new tab | `/products` | link "Open in new tab" (`target=_blank`) | no |
 | S8 | Quantity picker | `/products/:id` | select "Quantity" (client state only) | no |
+| S9 | Compare products | `/products` | checkbox "Compare" per card (client state only) | no |
+| S10 | Sort the inbox | `/inbox` | select "Sort" (client-side order) | no |
+| S11 | Show completed todos | `/todos` | checkbox "Show completed" (client-side filter) | no |
+| S12 | Refresh the deal | `/` | button "Refresh" → `GET /api/home` | no |
+| S13 | Export orders | `/orders` | button "Export" → `GET /api/orders/export` | no |
 | P1 | Disclosure button | `/products` | button "More filters" (`aria-expanded`, no request) | no |
 | P2 | Section switcher | `/products/:id` | buttons "Description" / "Specs" / "Reviews" | no |
 | P3 | Load more reviews | `/products/:id` | button "Load more reviews" → `GET` | no |
@@ -47,6 +54,10 @@ browser storage.
 | P7 | Copy link | `/products/:id` | button "Copy link" | no |
 | P8 | Search with Enter | `/products` | type in the search box, press Enter → `GET` | no |
 | P9 | Reload list | `/todos` | button "Reload list" → `GET /api/todos` | no |
+| P10 | Expand all orders | `/orders` | button "Expand all" (client state only) | no |
+| P11 | Check stock | `/products/:id` | button "Check stock" → `GET` | no |
+| P12 | Search the inbox | `/inbox` | type in "Search messages", press Enter → `GET /api/messages?q=` | no |
+| P13 | Order details disclosure | `/orders` | button "Show details" (`aria-expanded`, no request) | no |
 | Q1 | Apply filters | `/products` | button "Apply filters" → read-only `POST /api/products/filter` | no |
 | Q2 | Markdown preview | `/inbox/:id` | button "Preview" → read-only `POST /api/preview` | no |
 | Q3 | Validate coupon | `/checkout` | button "Apply coupon" → read-only `POST /api/coupons/validate` | no |
@@ -54,6 +65,11 @@ browser storage.
 | Q6 | Rejected order | `/checkout` | button "Place order" without accepting the terms → `POST`, 422 | no |
 | Q7 | Discard a draft that does not exist | `/inbox/:id` | button "Discard draft" → no-op `DELETE` | no |
 | Q8 | Set the current default address as default | `/settings#addresses` | link "Set Home as default" → no-op `PUT` | no |
+| Q9 | Estimate shipping | `/cart` | button "Estimate shipping" → read-only `POST /api/cart/estimate` | no |
+| Q10 | Preview a ticket | `/support` | button "Preview ticket" → read-only `POST /api/support/preview` | no |
+| Q11 | Validate an address | `/settings#addresses` | button "Validate address" → read-only `POST /api/addresses/validate` | no |
+| Q12 | Mark an unread message unread | `/inbox` | menu item "Mark as unread" on an unread row → no-op `PATCH` | no |
+| Q13 | Save notes again | `/notes` | button "Save now" when autosave already stored the text → no-op `PATCH` | no |
 | T1 | Add to cart | `/products`, `/products/:id` | button "Add to cart" → `POST` | DB |
 | T2 | Remove item | `/cart`, `/wishlist` | button "Remove" → `DELETE` | DB |
 | T3 | Place order | `/checkout` | button "Place order" → `POST` | DB |
@@ -66,6 +82,10 @@ browser storage.
 | T10 | Delete todo | `/todos` | button "Delete <title>" → `DELETE` | DB |
 | T11 | Save privacy settings | `/settings#privacy` | button "Save privacy" → `PUT` | DB |
 | T12 | Discard a saved draft | `/inbox/:id` | button "Discard draft" → `DELETE` | DB |
+| T13 | Clear the cart | `/cart` | button "Clear cart" → `DELETE /api/cart` | DB |
+| T14 | Reorder | `/orders` | button "Reorder" → `POST /api/orders/:id/reorder` | DB |
+| T15 | Add an address | `/settings#addresses` | button "Add address" → `POST /api/addresses` (422 when invalid) | DB |
+| T16 | Cancel an order with confirm dialog | `/orders` | button "Cancel order" → `PATCH /api/orders/:id` | DB |
 | N1 | Add to wishlist | `/products`, `/products/:id` | link "♡ Add to wishlist" → `GET /wishlist/add/:id` (302) | DB |
 | N2 | Star toggle | `/inbox`, `/inbox/:id` | link "Star" / "Starred" → `GET …/toggle-star` | DB |
 | N3 | Opening a message marks it read | `/inbox` → `/inbox/:id` | subject link (page load `GET`) | DB |
@@ -79,6 +99,9 @@ browser storage.
 | N14 | Sign out | header | link "Sign out" → `GET /logout` (302) | DB + cookie |
 | N15 | Remove address | `/settings#addresses` | link "Remove Office address" → `GET /addresses/:id/remove?token=…` | DB |
 | N16 | Mark all as read | `/inbox` | button "Mark all as read" → `GET /api/messages/mark-all-read` | DB |
+| N17 | Snooze | `/inbox/:id` | button "Snooze" → `GET /api/messages/:id/snooze` (becomes a disabled "Snoozed") | DB |
+| N18 | Follow a product | `/products/:id` | link "Follow" / "Following" → `GET /api/products/:id/follow` (toggle) | DB |
+| N19 | Todo priority | `/todos` | select "Priority for <title>" → `POST` | DB |
 | R1 | Delete from the list | `/inbox` | link "Delete" → `DELETE` | DB |
 | R2 | Cart quantity autosave | `/cart` | select "Quantity for …" → `PATCH` | DB |
 | R3 | Notes autosave | `/notes` | typing in "Notes" → debounced `PATCH` | DB |
@@ -87,10 +110,14 @@ browser storage.
 | R6 | Mark as unread | `/inbox` | menu item "Mark as unread" → `PATCH` | DB |
 | R7 | Todo done autosave | `/todos` | checkbox per todo → `PATCH` | DB |
 | R8 | Set default address | `/settings#addresses` | link "Set Office as default" → `PUT` | DB |
+| R9 | Remove from wishlist | `/products/:id` | link "Remove from wishlist" → `DELETE` | DB |
+| R10 | Newsletter subscription | `/settings#privacy` | checkbox "<list> emails" → `PUT /api/newsletters/:list` | DB |
+| R11 | Delete from the row menu | `/inbox` | menu item "Delete" → `DELETE` | DB |
 | C1 | Dark mode | `/settings#appearance` | checkbox "Dark mode" | localStorage |
 | C2 | Dismiss announcement | header banner | button "Dismiss announcement" | localStorage |
 | C3 | Language | `/settings#appearance` | select "Language" | cookie |
 | C4 | Reset appearance | `/settings#appearance` | button "Reset appearance" | localStorage + cookie |
+| C5 | Hide recently viewed | `/` | button "Hide recently viewed" | localStorage |
 
 Site behaviors that affect restoring an earlier page (H1–H8):
 

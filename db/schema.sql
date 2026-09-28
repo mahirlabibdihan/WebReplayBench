@@ -120,6 +120,12 @@ CREATE TABLE wishlist (
     PRIMARY KEY (user_id, product_id)
 );
 
+CREATE TABLE follows (
+    user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    product_id INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, product_id)
+);
+
 CREATE TABLE cart_items (
     id         SERIAL PRIMARY KEY,
     user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -155,7 +161,8 @@ CREATE TABLE orders (
     shipping    TEXT NOT NULL CHECK (shipping IN ('standard', 'express')),
     coupon_code TEXT,
     total_cents INT NOT NULL,
-    placed_at   TEXT NOT NULL
+    placed_at   TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'placed' CHECK (status IN ('placed', 'cancelled'))
 );
 
 CREATE TABLE order_items (
@@ -176,6 +183,7 @@ CREATE TABLE messages (
     sort_key   BIGINT NOT NULL,
     is_read    BOOLEAN NOT NULL DEFAULT false,
     is_starred BOOLEAN NOT NULL DEFAULT false,
+    is_snoozed BOOLEAN NOT NULL DEFAULT false,
     folder     TEXT NOT NULL DEFAULT 'inbox' CHECK (folder IN ('inbox', 'archive'))
 );
 
@@ -204,7 +212,8 @@ CREATE TABLE todos (
     id      SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title   TEXT NOT NULL,
-    done    BOOLEAN NOT NULL DEFAULT false
+    done     BOOLEAN NOT NULL DEFAULT false,
+    priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high'))
 );
 
 CREATE TABLE notes (

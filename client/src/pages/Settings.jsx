@@ -17,6 +17,7 @@ export default function Settings() {
   const [status, setStatus] = useState('');
   const [dark, setDark] = useState(localStorage.getItem('theme') === 'dark');
   const [lang, setLang] = useState(getCookie('lang') || 'en');
+  const [newAddress, setNewAddress] = useState({ label: '', line: '' });
 
   const load = () => api('/api/settings').then((d) => {
     setData(d);
@@ -61,6 +62,25 @@ export default function Settings() {
     await api(`/api/addresses/${a.id}/default`, { method: 'PUT', body: {}, scenario: 'R8' });
     saved(`${a.label} is your default address.`);
   };
+  // Subscription checkbox that saves immediately through PUT (R10).
+  const setSubscribed = async (n, on) => {
+    await api(`/api/newsletters/${n.list}`, { method: 'PUT', body: { subscribed: on }, scenario: 'R10' });
+    saved(on ? `Subscribed to ${n.title}.` : `Unsubscribed from ${n.title}.`);
+  };
+  // Read-only POST (Q11), then a real POST (T15).
+  const validateAddress = async () => {
+    setStatus((await api('/api/addresses/validate', { method: 'POST', body: newAddress, scenario: 'Q11' })).message);
+  };
+  const addAddress = async (e) => {
+    e.preventDefault();
+    try {
+      await api('/api/addresses', { method: 'POST', body: newAddress, scenario: 'T15' });
+      setNewAddress({ label: '', line: '' });
+      saved('Address added.');
+    } catch (err) {
+      setStatus(err.message);
+    }
+  };
   const toggleDark = (on) => {
     localStorage.setItem('theme', on ? 'dark' : 'light');
     setDark(on);
@@ -74,6 +94,7 @@ export default function Settings() {
   const resetAppearance = () => {
     localStorage.removeItem('theme');
     localStorage.removeItem('dismissed_announcements');
+    localStorage.removeItem('hide_recently_viewed');
     document.cookie = 'lang=; path=/; max-age=0';
     window.location.reload();
   };
@@ -131,10 +152,11 @@ export default function Settings() {
           <h2>Newsletters</h2>
           <ul>
             {data.newsletters.map((n) => (
-              <li key={n.list}>
-                {n.title}: {n.subscribed ? (
-                  <>Subscribed · <a href={`/unsubscribe?list=${n.list}`} data-scenario="N5">Unsubscribe from {n.title}</a></>
-                ) : 'Not subscribed'}
+              <li key={n.list} className="row">
+                <label>
+                  <input type="checkbox" checked={n.subscribed} onChange={(e) => setSubscribed(n, e.target.checked)} data-scenario="R10" /> {n.title} emails
+                </label>
+                {n.subscribed && <a href={`/unsubscribe?list=${n.list}`} data-scenario="N5">Unsubscribe from {n.title}</a>}
               </li>
             ))}
           </ul>
@@ -157,6 +179,15 @@ export default function Settings() {
             ))}
           </ul>
           <p><small>Addresses used by past orders are kept.</small></p>
+          <form onSubmit={addAddress} aria-label="Add an address">
+            <h2>Add an address</h2>
+            <label className="block">Label <input value={newAddress.label} onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })} /></label>
+            <label className="block">Address <input value={newAddress.line} onChange={(e) => setNewAddress({ ...newAddress, line: e.target.value })} /></label>
+            <div className="row">
+              <button type="button" onClick={validateAddress} data-scenario="Q11">Validate address</button>
+              <button type="submit" data-scenario="T15">Add address</button>
+            </div>
+          </form>
         </section>
       )}
 

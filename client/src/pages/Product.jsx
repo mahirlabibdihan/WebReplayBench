@@ -52,6 +52,22 @@ export default function Product() {
     setRating(stars);
     await api(`/api/products/${p.id}/rating`, { method: 'POST', body: { stars }, scenario: 'N11' });
   };
+  // Follow toggle through a GET (N18).
+  const toggleFollow = async (e) => {
+    e.preventDefault();
+    const res = await api(`/api/products/${p.id}/follow`, { scenario: 'N18' });
+    setP({ ...p, followed: res.followed });
+  };
+  // Remove through a link that issues a DELETE (R9).
+  const removeFromWishlist = async (e) => {
+    e.preventDefault();
+    await api(`/api/wishlist/${p.id}`, { method: 'DELETE', scenario: 'R9' });
+    setP({ ...p, wishlisted: false });
+    refresh();
+  };
+  const checkStock = async () => {
+    setStatus((await api(`/api/products/${p.id}/stock`, { scenario: 'P11' })).message);
+  };
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -72,6 +88,9 @@ export default function Product() {
         </label>
         <button type="button" onClick={addToCart} data-scenario="T1">{t('Add to cart')}</button>
         <WishlistLink product={p} next={`/products/${p.id}`} />
+        {p.wishlisted && <a href="#" onClick={removeFromWishlist} data-scenario="R9">Remove from wishlist</a>}
+        <a href="#" onClick={toggleFollow} data-scenario="N18">{p.followed ? 'Following' : 'Follow'}</a>
+        <button type="button" onClick={checkStock} data-scenario="P11">Check stock</button>
         <button type="button" onClick={copyLink} data-scenario="P7">Copy link</button>
       </div>
       {status && <p role="status" className="toast">{status}</p>}

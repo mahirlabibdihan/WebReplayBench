@@ -25,6 +25,7 @@ export default function Products() {
   const [filters, setFilters] = useState({ minPrice: '', maxPrice: '', inStock: false });
   const [query, setQuery] = useState(params.get('q') || '');
   const [toast, setToast] = useState('');
+  const [compare, setCompare] = useState([]);
 
   const load = () => api(`/api/products?${params.toString()}`).then(setData);
   useEffect(() => {
@@ -107,6 +108,7 @@ export default function Products() {
 
       {toast && <p role="status" className="toast">{toast}</p>}
       <p>{filtered ? `Showing ${items.length} filtered results` : `Showing ${items.length} of ${data.total} products`}</p>
+      {compare.length > 0 && <p role="status">Comparing {compare.length} product{compare.length === 1 ? '' : 's'}.</p>}
 
       <ul className="grid">
         {items.map((p) => (
@@ -118,6 +120,10 @@ export default function Products() {
               <WishlistLink product={p} next={here} />
               <a href="#" onClick={(e) => quickAdd(e, p)} data-scenario="N7">Quick add +1</a>
               <a href={`/products/${p.id}`} target="_blank" rel="noopener" data-scenario="S7">Open in new tab</a>
+              <label>
+                <input type="checkbox" checked={compare.includes(p.id)} data-scenario="S9"
+                  onChange={() => setCompare((c) => (c.includes(p.id) ? c.filter((x) => x !== p.id) : [...c, p.id]))} /> Compare
+              </label>
             </div>
           </li>
         ))}

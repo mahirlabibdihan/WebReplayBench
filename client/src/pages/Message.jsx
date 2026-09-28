@@ -47,6 +47,11 @@ export default function Message() {
     refresh();
     navigate('/inbox');
   };
+  // A button whose request is a GET that writes (N17).
+  const snooze = async () => {
+    await api(`/api/messages/${m.id}/snooze`, { scenario: 'N17' });
+    setM({ ...m, is_snoozed: true });
+  };
   const showPreview = async () => {
     setPreview((await api('/api/preview', { method: 'POST', body: { markdown: text }, scenario: 'Q2' })).html);
   };
@@ -88,6 +93,7 @@ export default function Message() {
       {status && <p role="status" className="toast">{status}</p>}
       <div className="row">
         <button type="button" onClick={() => setComposing(true)} data-scenario="P5">Reply</button>
+        <button type="button" onClick={snooze} disabled={m.is_snoozed} data-scenario="N17">{m.is_snoozed ? 'Snoozed' : 'Snooze'}</button>
         <button type="button" onClick={remove} data-scenario="T7">Delete</button>
       </div>
       {composing && (

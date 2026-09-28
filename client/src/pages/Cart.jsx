@@ -6,6 +6,7 @@ import { useSummary } from '../App.jsx';
 export default function Cart() {
   const { refresh } = useSummary();
   const [cart, setCart] = useState(null);
+  const [estimateText, setEstimateText] = useState('');
   useEffect(() => {
     api('/api/cart').then(setCart);
   }, []);
@@ -19,6 +20,15 @@ export default function Cart() {
   const remove = async (item) => {
     setCart(await api(`/api/cart/${item.id}`, { method: 'DELETE', scenario: 'T2' }));
     refresh();
+  };
+  const clearCart = async () => {
+    setCart(await api('/api/cart', { method: 'DELETE', scenario: 'T13' }));
+    refresh();
+  };
+  // Read-only POST (Q9).
+  const estimate = async () => {
+    const e = await api('/api/cart/estimate', { method: 'POST', body: {}, scenario: 'Q9' });
+    setEstimateText(`With standard shipping: ${money(e.standard_cents)} · with express shipping: ${money(e.express_cents)}`);
   };
 
   return (
@@ -44,6 +54,13 @@ export default function Cart() {
         </table>
       )}
       <p>Subtotal: <strong>{money(cart.subtotal_cents)}</strong></p>
+      {cart.items.length > 0 && (
+        <div className="row">
+          <button type="button" onClick={estimate} data-scenario="Q9">Estimate shipping</button>
+          <button type="button" onClick={clearCart} data-scenario="T13">Clear cart</button>
+        </div>
+      )}
+      {estimateText && <p role="status">{estimateText}</p>}
       {cart.items.length > 0 && <Link to="/checkout" data-scenario="S5">Proceed to checkout</Link>}
     </>
   );

@@ -141,7 +141,8 @@ export function createApp() {
 
   // -------------------------------------------------------------- products
   const productFields = `p.id, p.name, p.category, p.price_cents, p.stock,
-    EXISTS (SELECT 1 FROM wishlist w WHERE w.user_id = $1 AND w.product_id = p.id) AS wishlisted`;
+    EXISTS (SELECT 1 FROM wishlist w WHERE w.user_id = $1 AND w.product_id = p.id) AS wishlisted,
+    EXISTS (SELECT 1 FROM follows f WHERE f.user_id = $1 AND f.product_id = p.id) AS followed`;
 
   api.get('/products', route(null, async (req, res) => {
     const uid = req.user.id;
@@ -191,6 +192,24 @@ export function createApp() {
     const count = await query('SELECT COUNT(*)::int AS n FROM reviews WHERE product_id = $1', [id]);
     const rating = await query('SELECT stars FROM ratings WHERE user_id = $1 AND product_id = $2', [uid, id]);
     res.json({ ...product, reviews: reviews.rows, reviewCount: count.rows[0].n, myRating: rating.rows[0]?.stars || null });
+  }));
+
+  api.get('/products/:id/stock', route('P11', async (req, res) => {
+    const { rows: [p] } = await query('SELECT stock FROM products WHERE id = $1', [req.params.id]);
+    if (!p) throw new HttpError(404, 'Product not found.');
+    res.json({ stock: p.stock, message: p.stock > 0 ? `${p.stock} available in the warehouse` : 'Out of stock' });
+  }));
+
+  // Follow toggle through a GET (N18).
+  api.get('/products/:id/follow', route('N18', async (req, res) => {
+    const args = [req.user.id, Number(req.params.id)];
+    const followed = await withTx(req, async (c) => {
+      const del = await c.query('DELETE FROM follows WHERE user_id = $1 AND product_id = $2', args);
+      if (del.rowCount) return false;
+      await c.query('INSERT INTO follows (user_id, product_id) VALUES ($1, $2)', args);
+      return true;
+    });
+    res.json({ followed });
   }));
 
   api.get('/products/:id/reviews', route('P3', async (req, res) => {
@@ -267,6 +286,17 @@ export function createApp() {
     res.json(await cartSummary(req.user.id));
   }));
 
+  api.delete('/cart', route('T13', async (req, res) => {
+    await withTx(req, (c) => c.query('DELETE FROM cart_items WHERE user_id = $1', [req.user.id]));
+    res.json(await cartSummary(req.user.id));
+  }));
+
+  // Read-only POST (Q9).
+  api.post('/cart/estimate', route('Q9', async (req, res) => {
+    const { subtotal_cents } = await cartSummary(req.user.id);
+    res.json({ subtotal_cents, standard_cents: subtotal_cents + SHIPPING_CENTS.standard, express_cents: subtotal_cents + SHIPPING_CENTS.express });
+  }));
+
   api.delete('/cart/:itemId', route('T2', async (req, res) => {
     await withTx(req, (c) => c.query('DELETE FROM cart_items WHERE id = $1 AND user_id = $2', [req.params.itemId, req.user.id]));
     res.json(await cartSummary(req.user.id));
@@ -324,7 +354,7 @@ export function createApp() {
 
   const orderDetails = async (uid, where = '', params = []) => {
     const { rows } = await query(
-      `SELECT o.id, o.shipping, o.coupon_code, o.total_cents, o.placed_at, a.line AS address,
+      `SELECT o.id, o.shipping, o.coupon_code, o.total_cents, o.placed_at, o.status, a.line AS address,
          json_agg(json_build_object('name', p.name, 'qty', i.qty, 'price_cents', i.price_cents) ORDER BY i.id) AS items
        FROM orders o JOIN addresses a ON a.id = o.address_id
        JOIN order_items i ON i.order_id = o.id JOIN products p ON p.id = i.product_id
@@ -335,6 +365,31 @@ export function createApp() {
   };
 
   api.get('/orders', route(null, async (req, res) => res.json({ orders: await orderDetails(req.user.id) })));
+
+  // Read-only export behind a button named "Export" (S13).
+  api.get('/orders/export', route('S13', async (req, res) => {
+    const orders = await orderDetails(req.user.id);
+    const lines = ['order,placed_at,status,total'].concat(orders.map((o) => `${o.id},${o.placed_at},${o.status},${(o.total_cents / 100).toFixed(2)}`));
+    res.json({ csv: lines.join('\n') });
+  }));
+
+  api.patch('/orders/:id', route('T16', async (req, res) => {
+    if (req.body?.status !== 'cancelled') throw new HttpError(422, 'Only cancellation is supported.');
+    await withTx(req, (c) => c.query("UPDATE orders SET status = 'cancelled' WHERE id = $1 AND user_id = $2", [req.params.id, req.user.id]));
+    res.json({ ok: true });
+  }));
+
+  api.post('/orders/:id/reorder', route('T14', async (req, res) => {
+    const uid = req.user.id;
+    await withTx(req, (c) => c.query(
+      `INSERT INTO cart_items (user_id, product_id, qty)
+       SELECT $1, i.product_id, i.qty FROM order_items i JOIN orders o ON o.id = i.order_id WHERE o.id = $2 AND o.user_id = $1
+       ON CONFLICT (user_id, product_id) DO UPDATE SET qty = cart_items.qty + EXCLUDED.qty`,
+      [uid, req.params.id],
+    ));
+    res.json(await cartSummary(uid));
+  }));
+
   api.get('/orders/:id', route(null, async (req, res) => {
     const [order] = await orderDetails(req.user.id, 'AND o.id = $2', [req.params.id]);
     if (!order) throw new HttpError(404, 'Order not found.');
@@ -365,11 +420,15 @@ export function createApp() {
   // -------------------------------------------------------------- messages
   api.get('/messages', route(null, async (req, res) => {
     const folder = req.query.folder === 'archive' ? 'archive' : 'inbox';
+    const q = String(req.query.q || '').trim();
+    if (q) req.scenario = req.get('x-scenario') || 'P12';
     const { rows } = await query(
-      'SELECT id, sender, subject, sent_at, is_read, is_starred FROM messages WHERE user_id = $1 AND folder = $2 ORDER BY sort_key DESC',
-      [req.user.id, folder],
+      `SELECT id, sender, subject, sent_at, is_read, is_starred, is_snoozed FROM messages
+       WHERE user_id = $1 AND folder = $2 AND ($3 = '' OR subject ILIKE '%' || $3 || '%' OR sender ILIKE '%' || $3 || '%')
+       ORDER BY sort_key DESC`,
+      [req.user.id, folder, q],
     );
-    res.json({ folder, messages: rows });
+    res.json({ folder, q, messages: rows });
   }));
 
   // A button whose GET marks everything read (N16).
@@ -383,7 +442,7 @@ export function createApp() {
     const uid = req.user.id;
     const id = Number(req.params.id);
     await withTx(req, (c) => c.query('UPDATE messages SET is_read = true WHERE id = $1 AND user_id = $2', [id, uid]));
-    const { rows: [m] } = await query('SELECT id, sender, subject, body, sent_at, is_read, is_starred, folder FROM messages WHERE id = $1 AND user_id = $2', [id, uid]);
+    const { rows: [m] } = await query('SELECT id, sender, subject, body, sent_at, is_read, is_starred, is_snoozed, folder FROM messages WHERE id = $1 AND user_id = $2', [id, uid]);
     if (!m) throw new HttpError(404, 'Message not found.');
     const replies = await query('SELECT id, body FROM replies WHERE message_id = $1 ORDER BY id', [id]);
     const draft = await query('SELECT body FROM drafts WHERE user_id = $1 AND message_id = $2', [uid, id]);
@@ -399,6 +458,12 @@ export function createApp() {
     ));
     if (!rows[0]) throw new HttpError(404, 'Message not found.');
     res.json({ is_starred: rows[0].is_starred });
+  }));
+
+  // Snooze through a GET behind a button (N17). One-way: the button becomes "Snoozed".
+  api.get('/messages/:id/snooze', route('N17', async (req, res) => {
+    await withTx(req, (c) => c.query('UPDATE messages SET is_snoozed = true WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]));
+    res.json({ is_snoozed: true });
   }));
 
   api.post('/messages/:id/archive', route('N10', async (req, res) => {
@@ -461,7 +526,7 @@ export function createApp() {
   }));
 
   // ----------------------------------------------------------------- todos
-  const todoList = async (uid) => (await query('SELECT id, title, done FROM todos WHERE user_id = $1 ORDER BY id', [uid])).rows;
+  const todoList = async (uid) => (await query('SELECT id, title, done, priority FROM todos WHERE user_id = $1 ORDER BY id', [uid])).rows;
 
   // Read-only reload behind a button (P9).
   api.get('/todos', route(null, async (req, res) => res.json({ todos: await todoList(req.user.id) })));
@@ -476,6 +541,14 @@ export function createApp() {
   // Checkbox that saves immediately through PATCH (R7).
   api.patch('/todos/:id', route('R7', async (req, res) => {
     await withTx(req, (c) => c.query('UPDATE todos SET done = $1 WHERE id = $2 AND user_id = $3', [Boolean(req.body?.done), req.params.id, req.user.id]));
+    res.json({ todos: await todoList(req.user.id) });
+  }));
+
+  // A POST fired by a select, not a button (N19).
+  api.post('/todos/:id/priority', route('N19', async (req, res) => {
+    const priority = String(req.body?.priority || '');
+    if (!['low', 'normal', 'high'].includes(priority)) throw new HttpError(422, 'Invalid priority.');
+    await withTx(req, (c) => c.query('UPDATE todos SET priority = $1 WHERE id = $2 AND user_id = $3', [priority, req.params.id, req.user.id]));
     res.json({ todos: await todoList(req.user.id) });
   }));
 
@@ -531,12 +604,46 @@ export function createApp() {
     res.json({ ok: true });
   }));
 
+  const cleanAddress = (body) => ({ label: String(body?.label || '').trim(), line: String(body?.line || '').trim() });
+  const addressProblem = ({ label, line }) =>
+    !label ? 'Enter a label.' : line.length < 8 ? 'Enter a full street address.' : !/\d/.test(line) ? 'The address needs a house number.' : null;
+
+  // Read-only POST (Q11).
+  api.post('/addresses/validate', route('Q11', async (req, res) => {
+    const problem = addressProblem(cleanAddress(req.body));
+    res.json({ valid: !problem, message: problem || 'Address looks good.' });
+  }));
+
+  api.post('/addresses', route('T15', async (req, res) => {
+    const a = cleanAddress(req.body);
+    const problem = addressProblem(a);
+    if (problem) throw new HttpError(422, problem);
+    await withTx(req, (c) => c.query('INSERT INTO addresses (user_id, label, line) VALUES ($1, $2, $3)', [req.user.id, a.label, a.line]));
+    res.json({ ok: true });
+  }));
+
+  // Newsletter subscription checkbox that saves immediately through PUT (R10).
+  api.put('/newsletters/:list', route('R10', async (req, res) => {
+    await withTx(req, (c) => c.query(
+      'UPDATE newsletter_subscriptions SET subscribed = $1 WHERE user_id = $2 AND list = $3',
+      [Boolean(req.body?.subscribed), req.user.id, req.params.list],
+    ));
+    res.json({ ok: true });
+  }));
+
   api.put('/settings/privacy', route('T11', async (req, res) => {
     await withTx(req, (c) => c.query('UPDATE settings SET profile_public = $1 WHERE user_id = $2', [Boolean(req.body?.profile_public), req.user.id]));
     res.json({ saved: true });
   }));
 
   // --------------------------------------------------------------- support
+  // Read-only POST (Q10).
+  api.post('/support/preview', route('Q10', async (req, res) => {
+    const subject = String(req.body?.subject || '').trim() || '(no subject)';
+    const body = String(req.body?.body || '').trim() || '(empty message)';
+    res.json({ preview: `${subject}: ${body}` });
+  }));
+
   api.get('/support/tickets', route(null, async (req, res) => {
     const { rows } = await query('SELECT id, topic, subject FROM support_tickets WHERE user_id = $1 ORDER BY id DESC', [req.user.id]);
     res.json({ tickets: rows });

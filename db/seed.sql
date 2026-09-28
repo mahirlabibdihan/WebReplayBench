@@ -38,6 +38,8 @@ CROSS JOIN (VALUES
     ('Felix',  4, 'Happy with it overall.')
 ) AS a(author, stars, body);
 
+INSERT INTO wishlist (user_id, product_id) VALUES (1, 13);
+
 INSERT INTO cart_items (user_id, product_id, qty) VALUES
     (1, 7, 1),
     (1, 15, 2);
