@@ -1,0 +1,26 @@
+{
+  "name": "webrecall-playground",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A web app that records ground truth for every persistent change, for evaluating web agents.",
+  "type": "module",
+  "scripts": {
+    "setup": "npm install && npm --prefix client install && npm run build && npm run db:init",
+    "build": "npm --prefix client run build",
+    "db:init": "node server/scripts/init-db.js",
+    "reset": "node server/scripts/reset.js",
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "dev:client": "npm --prefix client run dev",
+    "smoke": "node server/scripts/smoke.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,9 @@
+# Two independent playgrounds (each container has its own fresh database).
+# Point each agent/worker at one instance (app port + admin port).
+services:
+  playground-a:
+    build: .
+    ports: ["4000:4000", "127.0.0.1:4001:4001"]
+  playground-b:
+    build: .
+    ports: ["4100:4000", "127.0.0.1:4101:4001"]
