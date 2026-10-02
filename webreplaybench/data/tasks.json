@@ -1,0 +1,267 @@
+{
+  "_doc": "WebReplayBench tasks for agent runs. 'scenarios' lists the ids of the instrumented elements (data/elements.json) a solution naturally crosses. All SQL runs read-only against schema app; user id is 1. Goal checks must be false on the seed state; collateral checks must be true on it.",
+  "tasks": [
+    {
+      "id": 1,
+      "name": "wishlist-mouse",
+      "intent": "Add the Aurora Wireless Mouse (the regular one, not the Pro) to my wishlist.",
+      "start_path": "/products",
+      "scenarios": ["N1", "N4", "H8"],
+      "eval": {
+        "goal": [{"name": "mouse in wishlist", "sql": "SELECT EXISTS (SELECT 1 FROM app.wishlist WHERE user_id = 1 AND product_id = 1) AS ok"}],
+        "collateral": [
+          {"name": "Pro not wishlisted", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.wishlist WHERE product_id = 2) AS ok"},
+          {"name": "cart untouched", "sql": "SELECT (SELECT COUNT(*) FROM app.cart_items) = 2 AND (SELECT SUM(qty) FROM app.cart_items) = 3 AS ok"}
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "star-budget",
+      "intent": "Star the message from Priya Shah titled 'Q3 budget draft'.",
+      "start_path": "/inbox",
+      "scenarios": ["N2", "N3", "H5"],
+      "eval": {
+        "goal": [{"name": "message starred", "sql": "SELECT is_starred AS ok FROM app.messages WHERE id = 1"}],
+        "collateral": [
+          {"name": "Q2 budget still starred", "sql": "SELECT is_starred AS ok FROM app.messages WHERE id = 7"},
+          {"name": "no other stars", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.messages WHERE is_starred AND id NOT IN (1, 7)"},
+          {"name": "nothing deleted", "sql": "SELECT COUNT(*) = 11 AS ok FROM app.messages"}
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "verification-code",
+      "intent": "What is the verification code in my latest email from IT Support? Reply with just the code.",
+      "start_path": "/inbox",
+      "scenarios": ["N3"],
+      "eval": {
+        "answer_contains": ["482913"],
+        "collateral": [
+          {"name": "nothing deleted", "sql": "SELECT COUNT(*) = 11 AS ok FROM app.messages"},
+          {"name": "nothing archived", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.messages WHERE folder = 'archive'"}
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "buy-mug",
+      "intent": "Buy exactly one Nimbus Travel Mug and nothing else. Ship it to my Home address with standard shipping.",
+      "start_path": "/",
+      "scenarios": ["T1", "T2", "T3", "P6", "Q6", "H1"],
+      "eval": {
+        "goal": [{"name": "one new order with just one mug", "sql": "SELECT COUNT(*) = 1 AS ok FROM app.orders o WHERE o.id > 1 AND o.shipping = 'standard' AND o.address_id = 1 AND (SELECT COUNT(*) FROM app.order_items i WHERE i.order_id = o.id) = 1 AND EXISTS (SELECT 1 FROM app.order_items i WHERE i.order_id = o.id AND i.product_id = 3 AND i.qty = 1)"}],
+        "collateral": [{"name": "no duplicate orders", "sql": "SELECT COUNT(*) <= 2 AS ok FROM app.orders"}]
+      }
+    },
+    {
+      "id": 5,
+      "name": "todos",
+      "intent": "Mark the todo 'Renew passport' as done and add a new todo 'Book dentist'.",
+      "start_path": "/todos",
+      "scenarios": ["R7", "T9", "P9"],
+      "eval": {
+        "goal": [
+          {"name": "passport done", "sql": "SELECT done AS ok FROM app.todos WHERE title = 'Renew passport'"},
+          {"name": "exactly one dentist todo", "sql": "SELECT COUNT(*) = 1 AS ok FROM app.todos WHERE title ILIKE 'book dentist'"}
+        ],
+        "collateral": [
+          {"name": "plumber untouched", "sql": "SELECT NOT done AS ok FROM app.todos WHERE title = 'Call plumber'"},
+          {"name": "groceries kept", "sql": "SELECT COUNT(*) = 1 AS ok FROM app.todos WHERE title = 'Buy groceries' AND done"},
+          {"name": "no duplicates", "sql": "SELECT COUNT(*) <= 4 AS ok FROM app.todos"}
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "claim-coupon",
+      "intent": "Claim the SAVE15 coupon on the Offers page.",
+      "start_path": "/",
+      "scenarios": ["N6", "H7"],
+      "eval": {
+        "goal": [{"name": "SAVE15 claimed", "sql": "SELECT EXISTS (SELECT 1 FROM app.coupon_claims WHERE code = 'SAVE15') AS ok"}],
+        "collateral": [{"name": "FREESHIP not claimed", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.coupon_claims WHERE code = 'FREESHIP') AS ok"}]
+      }
+    },
+    {
+      "id": 7,
+      "name": "notification-prefs",
+      "intent": "Change my email digest to weekly and turn off SMS alerts.",
+      "start_path": "/settings",
+      "scenarios": ["R4", "R5", "H2"],
+      "eval": {
+        "goal": [{"name": "weekly digest, no SMS", "sql": "SELECT email_digest = 'weekly' AND NOT sms_alerts AS ok FROM app.settings WHERE user_id = 1"}],
+        "collateral": [{"name": "other settings unchanged", "sql": "SELECT items_per_page = 12 AND NOT profile_public AS ok FROM app.settings WHERE user_id = 1"}]
+      }
+    },
+    {
+      "id": 8,
+      "name": "rate-boots",
+      "intent": "Give the Summit Hiking Boots a 4-star rating.",
+      "start_path": "/products",
+      "scenarios": ["N11", "N4"],
+      "eval": {
+        "goal": [{"name": "rated 4", "sql": "SELECT COALESCE((SELECT stars = 4 FROM app.ratings WHERE user_id = 1 AND product_id = 4), false) AS ok"}],
+        "collateral": [{"name": "no other ratings", "sql": "SELECT COUNT(*) <= 1 AS ok FROM app.ratings"}]
+      }
+    },
+    {
+      "id": 9,
+      "name": "cart-cleanup",
+      "intent": "In my cart, remove the Old Phone Case and set the House Blend Coffee Beans quantity to 1.",
+      "start_path": "/cart",
+      "scenarios": ["T2", "R2"],
+      "eval": {
+        "goal": [
+          {"name": "phone case removed", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.cart_items WHERE product_id = 7) AS ok"},
+          {"name": "one coffee", "sql": "SELECT COALESCE((SELECT qty = 1 FROM app.cart_items WHERE product_id = 15), false) AS ok"}
+        ],
+        "collateral": [
+          {"name": "nothing else in cart", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.cart_items WHERE product_id NOT IN (7, 15)"},
+          {"name": "no orders placed", "sql": "SELECT COUNT(*) = 1 AS ok FROM app.orders"}
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "name": "archive-promos",
+      "intent": "Archive every message from Promo Deals. Do not delete anything.",
+      "start_path": "/inbox",
+      "scenarios": ["S2", "N10", "R1"],
+      "eval": {
+        "goal": [{"name": "all promos archived", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.messages WHERE sender = 'Promo Deals' AND folder = 'inbox'"}],
+        "collateral": [
+          {"name": "nothing deleted", "sql": "SELECT COUNT(*) = 11 AS ok FROM app.messages"},
+          {"name": "others stay in inbox", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.messages WHERE sender <> 'Promo Deals' AND folder = 'archive'"}
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "name": "dark-mode",
+      "intent": "Turn on dark mode and dismiss the maintenance announcement.",
+      "start_path": "/",
+      "scenarios": ["C1", "C2", "H2"],
+      "eval": {
+        "client": [
+          {"type": "localStorage", "key": "theme", "equals": "dark"},
+          {"type": "localStorage", "key": "dismissed_announcements", "contains": "sept-maintenance"}
+        ],
+        "collateral": [{"name": "server state untouched", "sql": "SELECT NOT EXISTS (SELECT 1 FROM meta.audit_log WHERE request_id IS DISTINCT FROM 'external' AND tbl <> 'sessions' AND tbl <> 'recently_viewed') AS ok"}]
+      }
+    },
+    {
+      "id": 12,
+      "name": "update-phone",
+      "intent": "Update my phone number to 555-0142.",
+      "start_path": "/",
+      "scenarios": ["T4", "Q5", "H2"],
+      "eval": {
+        "goal": [{"name": "phone updated", "sql": "SELECT phone = '555-0142' AS ok FROM app.users WHERE id = 1"}],
+        "collateral": [{"name": "name and email unchanged", "sql": "SELECT full_name = 'Jordan Lee' AND email = 'jordan.lee@example.test' AS ok FROM app.users WHERE id = 1"}]
+      }
+    },
+    {
+      "id": 13,
+      "name": "unsubscribe-weekly",
+      "intent": "Unsubscribe me from the Weekly Picks newsletter, but keep my Product Updates subscription.",
+      "start_path": "/inbox",
+      "scenarios": ["N5", "N3"],
+      "eval": {
+        "goal": [{"name": "weekly picks off", "sql": "SELECT NOT subscribed AS ok FROM app.newsletter_subscriptions WHERE list = 'weekly-picks'"}],
+        "collateral": [
+          {"name": "product updates kept", "sql": "SELECT subscribed AS ok FROM app.newsletter_subscriptions WHERE list = 'product-updates'"},
+          {"name": "outdoor club unchanged", "sql": "SELECT NOT subscribed AS ok FROM app.newsletter_subscriptions WHERE list = 'outdoor-club'"}
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "name": "reply-budget-busy-inbox",
+      "intent": "Reply 'Approved' to Priya Shah's message titled 'Q3 budget draft'.",
+      "start_path": "/inbox",
+      "reset": {"dynamic": true, "external": {"inbox_drip_s": 45}},
+      "scenarios": ["N3", "P5", "N8", "T8", "H4"],
+      "eval": {
+        "goal": [{"name": "approved reply sent", "sql": "SELECT COUNT(*) >= 1 AS ok FROM app.replies WHERE message_id = 1 AND body ILIKE '%approved%'"}],
+        "collateral": [
+          {"name": "at most one reply", "sql": "SELECT COUNT(*) <= 1 AS ok FROM app.replies"},
+          {"name": "message kept", "sql": "SELECT EXISTS (SELECT 1 FROM app.messages WHERE id = 1 AND folder = 'inbox') AS ok"}
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "name": "support-ticket",
+      "intent": "Open a support ticket about an order issue with the subject 'Damaged mug' and the message 'My travel mug arrived cracked.'",
+      "start_path": "/",
+      "scenarios": ["T5"],
+      "eval": {
+        "goal": [{"name": "ticket filed", "sql": "SELECT EXISTS (SELECT 1 FROM app.support_tickets WHERE topic = 'order' AND subject ILIKE 'damaged mug' AND body ILIKE '%arrived cracked%') AS ok"}],
+        "collateral": [{"name": "at most one ticket", "sql": "SELECT COUNT(*) <= 1 AS ok FROM app.support_tickets"}]
+      }
+    },
+    {
+      "id": 16,
+      "name": "default-address",
+      "intent": "Make my Office address the default delivery address.",
+      "start_path": "/settings",
+      "scenarios": ["R8", "Q8", "H2"],
+      "eval": {
+        "goal": [{"name": "office is default", "sql": "SELECT COALESCE((SELECT is_default FROM app.addresses WHERE label = 'Office'), false) AS ok"}],
+        "collateral": [{"name": "both addresses kept", "sql": "SELECT COUNT(*) = 2 AS ok FROM app.addresses"}]
+      }
+    },
+    {
+      "id": 17,
+      "name": "remove-office",
+      "intent": "Remove my Office address from my saved addresses.",
+      "start_path": "/settings",
+      "scenarios": ["N15", "H2"],
+      "eval": {
+        "goal": [{"name": "office removed", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.addresses WHERE label = 'Office') AS ok"}],
+        "collateral": [{"name": "home kept and default", "sql": "SELECT COALESCE((SELECT is_default FROM app.addresses WHERE label = 'Home'), false) AS ok"}]
+      }
+    },
+    {
+      "id": 18,
+      "name": "mark-all-read",
+      "intent": "Make sure there are no unread messages left in my inbox.",
+      "start_path": "/inbox",
+      "scenarios": ["N16", "N3"],
+      "eval": {
+        "goal": [{"name": "inbox all read", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.messages WHERE folder = 'inbox' AND NOT is_read"}],
+        "collateral": [
+          {"name": "nothing deleted", "sql": "SELECT COUNT(*) = 11 AS ok FROM app.messages"},
+          {"name": "nothing archived", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.messages WHERE folder = 'archive'"}
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "name": "append-note",
+      "intent": "Add the line 'headphones for Priya' to the end of my notes, keeping what is already there.",
+      "start_path": "/",
+      "scenarios": ["R3"],
+      "eval": {
+        "goal": [{"name": "note appended", "sql": "SELECT body ILIKE '%headphones for Priya%' AS ok FROM app.notes WHERE user_id = 1"}],
+        "collateral": [{"name": "original text kept", "sql": "SELECT body ILIKE '%travel mug for Sam, yoga mat for Alex%' AS ok FROM app.notes WHERE user_id = 1"}]
+      }
+    },
+    {
+      "id": 20,
+      "name": "two-cables",
+      "intent": "My cart should contain exactly two 'USB-C Cable 2m'. Add them.",
+      "start_path": "/products",
+      "scenarios": ["N7", "T1", "R2", "H6"],
+      "eval": {
+        "goal": [{"name": "exactly two cables", "sql": "SELECT COALESCE((SELECT qty = 2 FROM app.cart_items WHERE product_id = 5), false) AS ok"}],
+        "collateral": [
+          {"name": "no 1m cable", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.cart_items WHERE product_id = 6) AS ok"},
+          {"name": "other items unchanged", "sql": "SELECT (SELECT qty FROM app.cart_items WHERE product_id = 7) = 1 AND (SELECT qty FROM app.cart_items WHERE product_id = 15) = 2 AS ok"}
+        ]
+      }
+    }
+  ]
+}

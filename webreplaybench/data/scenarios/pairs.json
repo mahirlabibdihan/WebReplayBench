@@ -1,0 +1,288 @@
+{
+ "_doc": "Two-write backtracking scenarios: several interactions on the same page before the state to return to. `elements` are the instrumented elements written, in order. Fields as in single.json.",
+ "calibration": {"target_path_length": 7.47, "target_same_page_length": 1.81, "note": "path lengths are calibrated so that their means match the replay lengths observed on WebArena-lite; each cohort of cases and the controls are calibrated separately"},
+ "scenarios": [
+  {
+   "id": "W1",
+   "elements": ["N2", "N16"],
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Star"},
+    {"action": "click", "role": "button", "name": "Mark all as read"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W2",
+   "elements": ["N2", "N2"],
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Star"},
+    {"action": "click", "role": "link", "name": "Star"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W3",
+   "elements": ["N7", "N7"],
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Quick add +1", "nth": 0},
+    {"action": "click", "role": "link", "name": "Quick add +1", "nth": 1}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W4",
+   "elements": ["N7", "N1"],
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Quick add +1", "nth": 0},
+    {"action": "click", "role": "link", "name": "Add to wishlist", "match": "contains", "nth": 0}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W5",
+   "elements": ["N7", "T1"],
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Quick add +1", "nth": 0},
+    {"action": "click", "role": "button", "name": "Add to cart", "nth": 1}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W6",
+   "elements": ["N11", "N18"],
+   "start": "/products/4",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "radio", "name": "4 stars"},
+    {"action": "click", "role": "link", "name": "Follow"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Summit Hiking Boots"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W7",
+   "elements": ["N6", "N6"],
+   "start": "/offers",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Claim SAVE15"},
+    {"action": "click", "role": "link", "name": "Claim FREESHIP"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Offers"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W8",
+   "elements": ["N19", "N19"],
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Priority for Renew passport", "option": "High"},
+    {"action": "select", "role": "combobox", "name": "Priority for Call plumber", "option": "Low"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W9",
+   "elements": ["N19", "R7"],
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Priority for Renew passport", "option": "High"},
+    {"action": "click", "role": "checkbox", "name": "Renew passport"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W10",
+   "elements": ["N17", "N2"],
+   "start": "/inbox/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Snooze"},
+    {"action": "click", "role": "link", "name": "Star"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Q3 budget draft"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W11",
+   "elements": ["C1", "C2"],
+   "start": "/settings#appearance",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Dark mode"},
+    {"action": "click", "role": "button", "name": "Dismiss announcement"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Appearance"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "W12",
+   "elements": ["N2", "N10"],
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Star"},
+    {"action": "click", "role": "button", "name": "More actions for Your verification code"},
+    {"action": "click", "role": "menuitem", "name": "Archive"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  }
+ ]
+}

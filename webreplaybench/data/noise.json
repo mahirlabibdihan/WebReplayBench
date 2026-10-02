@@ -1,0 +1,11 @@
+{
+ "_doc": "Randomness profiles, passed to the admin API's reset: `dynamic` randomizes home-page content on every load; `external` starts another user who adds an inbox message every inbox_drip_s seconds and changes a product's stock every stock_drift_s seconds.",
+ "profiles": {
+  "none": {"dynamic": false, "external": null},
+  "dynamic": {"dynamic": true, "external": null},
+  "dynamic+external": {
+   "dynamic": true,
+   "external": {"inbox_drip_s": 20, "stock_drift_s": 10}
+  }
+ }
+}

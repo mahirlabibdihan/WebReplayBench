@@ -1,4 +1,5 @@
 node_modules/
-client/node_modules/
-client/dist/
+site/client/dist/
 .env
+__pycache__/
+*.pyc

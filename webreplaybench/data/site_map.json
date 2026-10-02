@@ -1,0 +1,21 @@
+{
+ "_doc": "How scenario paths reach pages: header links, routes to messages and products, detour pages, safe suffix steps.",
+ "header_links": {"/products": "Products", "/offers": "Offers", "/cart": "~Cart", "/wishlist": "~Wishlist", "/inbox": "~Inbox", "/todos": "Todos", "/notes": "Notes", "/orders": "Orders", "/support": "Support", "/settings": "Settings"},
+ "settings_tabs": {"profile": "Profile", "notifications": "Notifications", "privacy": "Privacy", "addresses": "Addresses", "appearance": "Appearance"},
+ "message_subjects": {"1": "Q3 budget draft", "4": "This week's top picks", "5": "Lunch on Friday?"},
+ "product_names": {"1": "Aurora Wireless Mouse", "4": "Summit Hiking Boots", "13": "Commuter Backpack"},
+ "detour_pages": ["Offers", "Orders", "Todos", "Notes", "Support", "Products"],
+ "suffix_pool": [
+  {"action": "click", "role": "button", "name": "More filters"},
+  {"action": "click", "role": "checkbox", "name": "Compare"},
+  {"action": "click", "role": "button", "name": "Specs"},
+  {"action": "click", "role": "button", "name": "Reviews"},
+  {"action": "click", "role": "button", "name": "Description"},
+  {"action": "select", "role": "combobox", "name": "Sort", "option": "Oldest first"},
+  {"action": "click", "role": "checkbox", "name": "Show completed"},
+  {"action": "click", "role": "button", "name": "Expand all"},
+  {"action": "click", "role": "button", "name": "Show details"},
+  {"action": "click", "role": "button", "name": "Reply"},
+  {"action": "click", "role": "checkbox", "name": "Electronics"}
+ ]
+}

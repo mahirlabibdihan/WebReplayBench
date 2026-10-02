@@ -1,9 +1,14 @@
-# WebOperator-Playground
+# WebReplayBench
 
-A small web app (React + Express + PostgreSQL) that records **exact ground
-truth for every persistent change** it undergoes. It is built for evaluating
-web agents: an agent browses it like any other site, while a separate admin
-API tells you, per request, whether and how the database changed.
+A benchmark for web agents that act on live websites: a web app (React +
+Express + PostgreSQL) that records **exact ground truth for every persistent
+change** it undergoes, and a BrowserGym package that runs tasks on it. An agent
+browses the site like any other, while a separate admin API tells you, per
+request, whether and how the database changed. This makes it possible to measure
+what benchmark websites cannot show: whether an agent detects destructive
+actions, and whether backtracking, replay or retries re-execute them.
+
+The benchmark is agent-independent: nothing in it assumes a particular agent.
 
 The app is "Nimbus Market", a signed-in account with a shop, inbox, todos,
 notes, offers, support form and settings. Many of its interactions are
@@ -28,7 +33,7 @@ the `X-Scenario` request header and stored with each audit row).
 "Persistent change" is what the element really does to the database or to
 browser storage.
 
-86 elements: 48 that change persistent state and 38 that do not.
+92 elements: 54 that change persistent state and 38 that do not.
 
 | Id | Interaction | Page | Element and request | Persistent change |
 |---|---|---|---|---|
@@ -86,6 +91,8 @@ browser storage.
 | T14 | Reorder | `/orders` | button "Reorder" → `POST /api/orders/:id/reorder` | DB |
 | T15 | Add an address | `/settings#addresses` | button "Add address" → `POST /api/addresses` (422 when invalid) | DB |
 | T16 | Cancel an order with confirm dialog | `/orders` | button "Cancel order" → `PATCH /api/orders/:id` | DB |
+| T17 | Post a product review | `/products/:id` (Reviews) | textbox "Your review" + button "Post review" → `POST /api/products/:id/reviews` | DB |
+| T18 | Decrease a cart quantity | `/cart` | button "Decrease quantity of <product>" → `PATCH /api/cart/:id/decrement` | DB |
 | N1 | Add to wishlist | `/products`, `/products/:id` | link "♡ Add to wishlist" → `GET /wishlist/add/:id` (302) | DB |
 | N2 | Star toggle | `/inbox`, `/inbox/:id` | link "Star" / "Starred" → `GET …/toggle-star` | DB |
 | N3 | Opening a message marks it read | `/inbox` → `/inbox/:id` | subject link (page load `GET`) | DB |
@@ -102,6 +109,8 @@ browser storage.
 | N17 | Snooze | `/inbox/:id` | button "Snooze" → `GET /api/messages/:id/snooze` (becomes a disabled "Snoozed") | DB |
 | N18 | Follow a product | `/products/:id` | link "Follow" / "Following" → `GET /api/products/:id/follow` (toggle) | DB |
 | N19 | Todo priority | `/todos` | select "Priority for <title>" → `POST` | DB |
+| N20 | Mark a todo important | `/todos` | link "Mark <title> important" → `GET /api/todos/:id/important` (toggle) | DB |
+| N21 | Default address | `/settings#addresses` | radio "Use <label> as default" → `POST /api/addresses/:id/make-default` | DB |
 | R1 | Delete from the list | `/inbox` | link "Delete" → `DELETE` | DB |
 | R2 | Cart quantity autosave | `/cart` | select "Quantity for …" → `PATCH` | DB |
 | R3 | Notes autosave | `/notes` | typing in "Notes" → debounced `PATCH` | DB |
@@ -113,11 +122,13 @@ browser storage.
 | R9 | Remove from wishlist | `/products/:id` | link "Remove from wishlist" → `DELETE` | DB |
 | R10 | Newsletter subscription | `/settings#privacy` | checkbox "<list> emails" → `PUT /api/newsletters/:list` | DB |
 | R11 | Delete from the row menu | `/inbox` | menu item "Delete" → `DELETE` | DB |
-| C1 | Dark mode | `/settings#appearance` | checkbox "Dark mode" | localStorage |
+| R12 | Order update emails autosave | `/settings#notifications` | checkbox "Order update emails" → `PUT /api/settings/order-updates` | DB |
+| C1 | Dark mode | `/settings#appearance` | checkbox "Dark mode" (CSS only: not visible in the accessibility tree) | localStorage |
 | C2 | Dismiss announcement | header banner | button "Dismiss announcement" | localStorage |
 | C3 | Language | `/settings#appearance` | select "Language" | cookie |
 | C4 | Reset appearance | `/settings#appearance` | button "Reset appearance" | localStorage + cookie |
 | C5 | Hide recently viewed | `/` | button "Hide recently viewed" | localStorage |
+| C6 | Compact wishlist | `/wishlist` | checkbox "Compact view" (hides prices) | localStorage |
 
 Site behaviors that affect restoring an earlier page (H1–H8):
 
@@ -134,11 +145,12 @@ Site behaviors that affect restoring an earlier page (H1–H8):
 - **H8** N4 inserts links into "Recently viewed" above "Trending now" on the
   home page, shifting everything below it.
 
-## Run locally
+## Run the site locally
 
 Requires Node 20+ and PostgreSQL.
 
 ```bash
+cd site
 cp .env.example .env        # set DATABASE_URL
 npm run setup               # install, build the client, create + seed the database
 node server/index.js        # app on :4000, admin API on 127.0.0.1:4001
@@ -153,18 +165,18 @@ The server resets the database when it starts. To reset at any other time, run
 must write exactly when the table above says so, and reset must be
 deterministic.
 
-## Run in Docker
+## Run the site in Docker
 
 One container holds PostgreSQL, the API server and the built client, and
 starts from a fresh database every time. No volume is used, so parallel
 containers never share state.
 
 ```bash
-docker build -t webrecall-playground .
-docker run --rm -p 4000:4000 -p 127.0.0.1:4001:4001 webrecall-playground
+docker build -t webreplaybench site
+docker run --rm -p 4000:4000 -p 127.0.0.1:4001:4001 webreplaybench
 ```
 
-`docker-compose.yml` starts two independent instances (ports 4000/4001 and
+`site/docker-compose.yml` starts two independent instances (ports 4000/4001 and
 4100/4101).
 
 ## Admin API
@@ -180,14 +192,113 @@ docker run --rm -p 4000:4000 -p 127.0.0.1:4001:4001 webrecall-playground
 | `GET /fingerprint` | md5 of every app table |
 | `POST /query` | `{"sql": "...", "params": []}`, run in a read-only transaction |
 
+## Python package: tasks and ground truth
+
+`webreplaybench/` is a BrowserGym package. Install it into the environment of the
+agent under test:
+
+```bash
+pip install -e .
+```
+
+Importing it registers the tasks:
+
+| Task id | |
+|---|---|
+| `browsergym/playground.<id>` | the tasks of `webreplaybench/data/tasks.json`, each with SQL goal checks and collateral checks (changes a solution must not make) |
+| `browsergym/playground.controlled` | a blank task for controlled experiments that drive the browser without a language model |
+
+Every `setup()` resets the database. `validate()` scores a task against the
+database, not the page: success needs every goal check and no collateral damage.
+Every request the agent's page sends is recorded on `page.http_requests`, together
+with the ground truth of its response (`db_changed`, `db_changes`).
+
+| Module | |
+|---|---|
+| `webreplaybench/oracle.py` | client for the admin API: reset, audit rows, fingerprints, read-only SQL, controlled changes by another user |
+| `webreplaybench/evaluate.py` | task evaluation against the database |
+| `webreplaybench/scenarios.py` | loads the backtracking scenarios of `data/` for Python harnesses (see below) |
+| `webreplaybench/task.py` | the BrowserGym tasks; `task.HOOK` lets a harness observe each run (`begin_task`, `end_task`) |
+
+Environment: `PLAYGROUND_URL` (default `http://localhost:4000`),
+`PLAYGROUND_ADMIN_URL` (default `http://127.0.0.1:4001`). Restrict the agent to
+`PLAYGROUND_URL`, so that it cannot reach the admin API.
+
+## Dataset
+
+The dataset is plain JSON in `webreplaybench/data/`, so it can be used from any language.
+
+| File | Records | |
+|---|---|---|
+| `elements.json` | 100 | the instrumented elements above, with the ground truth of each (`none`, `server`, `client`, `server+client`) |
+| `tasks.json` | 20 | tasks for agent runs, with SQL goal checks and collateral checks |
+| `scenarios/single.json` | 105 | single-interaction backtracking scenarios: 55 that change persistent state (50 the database, 5 only browser storage) and 50 that change nothing |
+| `scenarios/pairs.json` | 12 | two-write scenarios: several interactions on the same page before the state to return to |
+| `scenarios/multi_user.json` | 120 | multi-user scenarios: a planned action on an inbox row (3 rows × 5 actions) and one of 8 edits by another user (`Oracle.perturb`) |
+| `noise.json` | 3 | randomness profiles: none, randomized content, and randomized content plus another user who adds inbox messages and changes stock |
+| `site_map.json` | | how paths reach pages, and the safe steps used as path suffixes |
+
+### Backtracking scenarios
+
+A backtracking scenario tests whether an agent that returns to an earlier state (tree
+search, retries, replay) re-executes a persistent change. The agent is brought to a state
+through real clicks, performs the interaction, and must then return to the state right
+after it. For example, from `scenarios/single.json`:
+
+```json
+{
+ "id": "T3", "element": "T3", "ground_truth": "server", "start": "/checkout",
+ "setup": [
+  {"action": "click", "role": "button", "name": "Continue"},
+  {"action": "click", "role": "button", "name": "Continue"},
+  {"action": "click", "role": "checkbox", "name": "I accept the terms of sale"}
+ ],
+ "interaction": [
+  {"action": "click", "role": "button", "name": "Place order"}
+ ],
+ "path": {
+  "detour": [{"action": "click", "role": "link", "name": "Offers"}],
+  "navigation": [
+   {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+   {"action": "click", "role": "link", "name": "Proceed to checkout"}
+  ],
+  "detour_length": 1, "suffix_length": 0
+ }
+}
+```
+
+A run starts on the home page, follows `path.detour` and `path.navigation` to `start`,
+runs `setup`, performs `interaction`, and then takes `suffix_length` safe steps on the same
+page (the first applicable ones of `site_map.json`'s `suffix_pool`, else a scroll). Steps are
+addressed by accessibility role and name, so any agent can resolve them: `match: contains`
+means the name only has to contain the given text, `nth` picks among several matches,
+`text` / `enter` are what `fill` types and whether it presses Enter, and `option` is what
+`select` picks.
+
+Path lengths are calibrated so that their means match the replay lengths observed on
+WebArena-lite: 7.47 actions for the whole path and 1.81 for its same-page part. After
+editing the scenarios, `python -m webreplaybench.scenarios --calibrate` recomputes the paths.
+
+To confirm that the dataset still applies to the running site (for example after
+changing the site), `python -m webreplaybench.check` plays every scenario's path, setup
+and interaction through role/name lookups and compares each interaction's effect on the
+database with its ground truth.
+
+The ground truth of a scenario comes from the admin API: whether returning to the state
+changed the database (audit rows), and whether each replayed action made the same requests
+as when it first ran.
+
 ## Layout
 
 ```
-db/schema.sql, db/seed.sql   schema with audit triggers; deterministic seed
-server/app.js                the app: REST API, GET-write routes, SPA shell
-server/admin.js              admin API (reset + ground truth)
-server/runtime.js            dynamic content and background activity
-server/scripts/              init-db, reset, smoke test
-client/src/                  React pages; instrumented elements carry data-scenario
-Dockerfile, docker/          single-container image
+site/                          the web app
+  db/schema.sql, db/seed.sql   schema with audit triggers; deterministic seed
+  server/app.js                the app: REST API, GET-write routes, SPA shell
+  server/admin.js              admin API (reset + ground truth)
+  server/runtime.js            dynamic content and background activity
+  server/scripts/              init-db, reset, smoke test
+  client/src/                  React pages; instrumented elements carry data-scenario
+  Dockerfile, docker/          single-container image
+webreplaybench/                BrowserGym tasks, oracle client, evaluation, dataset loader
+  data/                        the dataset (JSON): elements, tasks, scenarios, noise, site map
 ```

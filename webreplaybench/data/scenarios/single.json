@@ -1,0 +1,2565 @@
+{
+ "_doc": "Single-interaction backtracking scenarios. Each brings the agent to `start` through `path` (detour, then navigation, from the home page), runs `setup`, performs `interaction`, then takes `suffix_length` safe steps on the same page (from site_map.json: suffix_pool); the agent must then return to the state right after the interaction. `element` is the instrumented element (elements.json) and `ground_truth` what it changes: none | server | client | server+client. A step is {action: click|fill|select|scroll, role, name, ...} addressed by accessibility role and name (match: contains = the name only has to contain it; nth: which match, from 0; text / enter: what fill types and whether it presses Enter; option: what select picks; direction: scroll direction).",
+ "calibration": {"target_path_length": 7.47, "target_same_page_length": 1.81, "note": "path lengths are calibrated so that their means match the replay lengths observed on WebArena-lite; each cohort of cases and the controls are calibrated separately"},
+ "scenarios": [
+  {
+   "id": "T1",
+   "element": "T1",
+   "ground_truth": "server",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Add to cart"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T2",
+   "element": "T2",
+   "ground_truth": "server",
+   "start": "/cart",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Remove"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T3",
+   "element": "T3",
+   "ground_truth": "server",
+   "start": "/checkout",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Continue"},
+    {"action": "click", "role": "button", "name": "Continue"},
+    {"action": "click", "role": "checkbox", "name": "I accept the terms of sale"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Place order"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Proceed to checkout"}
+    ],
+    "detour_length": 1,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T4",
+   "element": "T4",
+   "ground_truth": "server",
+   "start": "/settings#profile",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "Phone", "text": "555-0142"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Save profile"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Profile"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T5",
+   "element": "T5",
+   "ground_truth": "server",
+   "start": "/support",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "Subject", "text": "Damaged mug"},
+    {"action": "fill", "role": "textbox", "name": "Message", "text": "It arrived cracked."}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Submit ticket"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T6",
+   "element": "T6",
+   "ground_truth": "server+client",
+   "start": "/settings#privacy",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Sign out everywhere"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Privacy"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T7",
+   "element": "T7",
+   "ground_truth": "server",
+   "start": "/inbox/5",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Delete"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Lunch on Friday?"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T8",
+   "element": "T8",
+   "ground_truth": "server",
+   "start": "/inbox/5",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reply"},
+    {"action": "fill", "role": "textbox", "name": "Reply text", "text": "Thanks!"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Send reply"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Lunch on Friday?"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T9",
+   "element": "T9",
+   "ground_truth": "server",
+   "start": "/todos",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "New todo", "text": "Book dentist"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Add todo"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T9-enter",
+   "element": "T9",
+   "ground_truth": "server",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "fill", "role": "textbox", "name": "New todo", "text": "Book dentist", "enter": true}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T10",
+   "element": "T10",
+   "ground_truth": "server",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Delete Renew passport"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T11",
+   "element": "T11",
+   "ground_truth": "server",
+   "start": "/settings#privacy",
+   "setup": [
+    {"action": "click", "role": "checkbox", "name": "Public profile"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Save privacy"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Privacy"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T12",
+   "element": "T12",
+   "ground_truth": "server",
+   "start": "/inbox/1",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reply"},
+    {"action": "fill", "role": "textbox", "name": "Reply text", "text": "Draft to discard"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Discard draft"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Q3 budget draft"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T13",
+   "element": "T13",
+   "ground_truth": "server",
+   "start": "/cart",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Clear cart"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T14",
+   "element": "T14",
+   "ground_truth": "server",
+   "start": "/orders",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Reorder"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T15",
+   "element": "T15",
+   "ground_truth": "server",
+   "start": "/settings#addresses",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "Label", "text": "Gym"},
+    {"action": "fill", "role": "textbox", "name": "Address", "text": "5 Park Road, Springfield"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Add address"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Addresses"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T16",
+   "element": "T16",
+   "ground_truth": "server",
+   "start": "/orders",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Cancel order"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T17",
+   "element": "T17",
+   "ground_truth": "server",
+   "start": "/products/1",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reviews"},
+    {"action": "fill", "role": "textbox", "name": "Your review", "text": "Works great."}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Post review"}
+   ],
+   "cohort": 2,
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "T18",
+   "element": "T18",
+   "ground_truth": "server",
+   "start": "/cart",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Decrease quantity of House Blend Coffee Beans"}
+   ],
+   "cohort": 2,
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "N16",
+   "element": "N16",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Mark all as read"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "C2",
+   "element": "C2",
+   "ground_truth": "client",
+   "start": "/",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Dismiss announcement"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"},
+     {"action": "click", "role": "link", "name": "Home"}
+    ],
+    "navigation": [],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "C4",
+   "element": "C4",
+   "ground_truth": "client",
+   "start": "/settings#appearance",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Dismiss announcement"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Reset appearance"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Appearance"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "N17",
+   "element": "N17",
+   "ground_truth": "server",
+   "start": "/inbox/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Snooze"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Q3 budget draft"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "C5",
+   "element": "C5",
+   "ground_truth": "client",
+   "start": "/",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Hide recently viewed"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"},
+     {"action": "click", "role": "link", "name": "Home"}
+    ],
+    "navigation": [],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "R1",
+   "element": "R1",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Delete"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "R2",
+   "element": "R2",
+   "ground_truth": "server",
+   "start": "/cart",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Quantity for Old Phone Case", "option": "3"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R3",
+   "element": "R3",
+   "ground_truth": "server",
+   "start": "/notes",
+   "setup": [],
+   "interaction": [
+    {"action": "fill", "role": "textbox", "name": "Notes", "text": "Buy a new desk lamp."}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R4",
+   "element": "R4",
+   "ground_truth": "server",
+   "start": "/settings#notifications",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Email digest", "option": "Weekly digest"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Notifications"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R5",
+   "element": "R5",
+   "ground_truth": "server",
+   "start": "/settings#notifications",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "SMS alerts"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Notifications"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R6",
+   "element": "R6",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [
+    {"action": "click", "role": "button", "name": "More actions for Lunch on Friday?"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "menuitem", "name": "Mark as unread"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R7",
+   "element": "R7",
+   "ground_truth": "server",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Renew passport"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R8",
+   "element": "R8",
+   "ground_truth": "server",
+   "start": "/settings#addresses",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Set Office as default"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Addresses"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R9",
+   "element": "R9",
+   "ground_truth": "server",
+   "start": "/products/13",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Remove from wishlist"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Page 2"},
+     {"action": "click", "role": "link", "name": "Commuter Backpack"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R10",
+   "element": "R10",
+   "ground_truth": "server",
+   "start": "/settings#privacy",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Outdoor Club emails"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Privacy"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "R11",
+   "element": "R11",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [
+    {"action": "click", "role": "button", "name": "More actions for Trip photos"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "menuitem", "name": "Delete"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "R12",
+   "element": "R12",
+   "ground_truth": "server",
+   "start": "/settings#notifications",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Order update emails"}
+   ],
+   "cohort": 2,
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Notifications"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "N1",
+   "element": "N1",
+   "ground_truth": "server",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Add to wishlist", "match": "contains"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N2",
+   "element": "N2",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Star"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N3",
+   "element": "N3",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Q3 budget draft"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N4",
+   "element": "N4",
+   "ground_truth": "server",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N5",
+   "element": "N5",
+   "ground_truth": "server",
+   "start": "/inbox/4",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Unsubscribe from Weekly Picks"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "This week's top picks"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N6",
+   "element": "N6",
+   "ground_truth": "server",
+   "start": "/offers",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Claim SAVE15"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Offers"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N7",
+   "element": "N7",
+   "ground_truth": "server",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Quick add +1"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N8",
+   "element": "N8",
+   "ground_truth": "server",
+   "start": "/inbox/1",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reply"}
+   ],
+   "interaction": [
+    {"action": "fill", "role": "textbox", "name": "Reply text", "text": "Looks good"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Q3 budget draft"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "N10",
+   "element": "N10",
+   "ground_truth": "server",
+   "start": "/inbox",
+   "setup": [
+    {"action": "click", "role": "button", "name": "More actions for Flash sale: 40% off audio"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "menuitem", "name": "Archive"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "N11",
+   "element": "N11",
+   "ground_truth": "server",
+   "start": "/products/4",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "radio", "name": "4 stars"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Summit Hiking Boots"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N14",
+   "element": "N14",
+   "ground_truth": "server+client",
+   "start": "/",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Sign out"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"},
+     {"action": "click", "role": "link", "name": "Home"}
+    ],
+    "navigation": [],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N15",
+   "element": "N15",
+   "ground_truth": "server",
+   "start": "/settings#addresses",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Remove Office address"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Addresses"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "C6",
+   "element": "C6",
+   "ground_truth": "client",
+   "start": "/wishlist",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Compact view"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Wishlist", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "C3",
+   "element": "C3",
+   "ground_truth": "client",
+   "start": "/settings#appearance",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Language", "option": "Español"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Appearance"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N18",
+   "element": "N18",
+   "ground_truth": "server",
+   "start": "/products/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Follow"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N19",
+   "element": "N19",
+   "ground_truth": "server",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Priority for Renew passport", "option": "High"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N20",
+   "element": "N20",
+   "ground_truth": "server",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Mark Renew passport important"}
+   ],
+   "cohort": 2,
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N21",
+   "element": "N21",
+   "ground_truth": "server",
+   "start": "/settings#addresses",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "radio", "name": "Use Office as default"}
+   ],
+   "cohort": 2,
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Addresses"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "N2-detail",
+   "element": "N2",
+   "ground_truth": "server",
+   "start": "/inbox/5",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Star"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Lunch on Friday?"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "S2",
+   "element": "S2",
+   "ground_truth": "none",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "More actions for Q3 budget draft"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S3",
+   "element": "S3",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Electronics"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S4",
+   "element": "S4",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Sort by", "option": "Price: low to high"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S6",
+   "element": "S6",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [
+    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "mouse"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Search"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S8",
+   "element": "S8",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Quantity", "option": "2"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P1",
+   "element": "P1",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "More filters"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P2",
+   "element": "P2",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Specs"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P3",
+   "element": "P3",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reviews"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Load more reviews"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P4",
+   "element": "P4",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "ZIP code", "text": "12345"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Check delivery"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P5",
+   "element": "P5",
+   "ground_truth": "none",
+   "start": "/inbox/5",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Reply"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Lunch on Friday?"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P6",
+   "element": "P6",
+   "ground_truth": "none",
+   "start": "/checkout",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Continue"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Proceed to checkout"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P7",
+   "element": "P7",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Copy link"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P8",
+   "element": "P8",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "mouse", "enter": true}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P9",
+   "element": "P9",
+   "ground_truth": "none",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Reload list"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "Q1",
+   "element": "Q1",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [
+    {"action": "click", "role": "button", "name": "More filters"},
+    {"action": "fill", "role": "textbox", "name": "Max price", "text": "20"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Apply filters"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q2",
+   "element": "Q2",
+   "ground_truth": "none",
+   "start": "/inbox/5",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reply"},
+    {"action": "fill", "role": "textbox", "name": "Reply text", "text": "**hi**"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Preview"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Lunch on Friday?"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q3",
+   "element": "Q3",
+   "ground_truth": "none",
+   "start": "/checkout",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Continue"},
+    {"action": "fill", "role": "textbox", "name": "Coupon code", "text": "WELCOME10"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Apply coupon"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Proceed to checkout"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q5",
+   "element": "Q5",
+   "ground_truth": "none",
+   "start": "/settings#profile",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Save profile"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Profile"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "Q6",
+   "element": "Q6",
+   "ground_truth": "none",
+   "start": "/checkout",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Continue"},
+    {"action": "click", "role": "button", "name": "Continue"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Place order"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Proceed to checkout"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q7",
+   "element": "Q7",
+   "ground_truth": "none",
+   "start": "/inbox/5",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reply"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Discard draft"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Lunch on Friday?"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q8",
+   "element": "Q8",
+   "ground_truth": "none",
+   "start": "/settings#addresses",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Set Home as default"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Addresses"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "S9",
+   "element": "S9",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Compare"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S10",
+   "element": "S10",
+   "ground_truth": "none",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Sort", "option": "Oldest first"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S11",
+   "element": "S11",
+   "ground_truth": "none",
+   "start": "/todos",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Show completed"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S12",
+   "element": "S12",
+   "ground_truth": "none",
+   "start": "/",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Refresh"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"},
+     {"action": "click", "role": "link", "name": "Home"}
+    ],
+    "navigation": [],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S13",
+   "element": "S13",
+   "ground_truth": "none",
+   "start": "/orders",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Export"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P10",
+   "element": "P10",
+   "ground_truth": "none",
+   "start": "/orders",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Expand all"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P11",
+   "element": "P11",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Check stock"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P12",
+   "element": "P12",
+   "ground_truth": "none",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "fill", "role": "searchbox", "name": "Search messages", "text": "budget", "enter": true}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P13",
+   "element": "P13",
+   "ground_truth": "none",
+   "start": "/orders",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Show details"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "Q9",
+   "element": "Q9",
+   "ground_truth": "none",
+   "start": "/cart",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Estimate shipping"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q10",
+   "element": "Q10",
+   "ground_truth": "none",
+   "start": "/support",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "Subject", "text": "Damaged mug"},
+    {"action": "fill", "role": "textbox", "name": "Message", "text": "It arrived cracked."}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Preview ticket"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q11",
+   "element": "Q11",
+   "ground_truth": "none",
+   "start": "/settings#addresses",
+   "setup": [
+    {"action": "fill", "role": "textbox", "name": "Label", "text": "Gym"},
+    {"action": "fill", "role": "textbox", "name": "Address", "text": "5 Park Road, Springfield"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Validate address"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"},
+     {"action": "click", "role": "link", "name": "Addresses"}
+    ],
+    "detour_length": 3,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q12",
+   "element": "Q12",
+   "ground_truth": "none",
+   "start": "/inbox",
+   "setup": [
+    {"action": "click", "role": "button", "name": "More actions for Q3 budget draft"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "menuitem", "name": "Mark as unread"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q13",
+   "element": "Q13",
+   "ground_truth": "none",
+   "start": "/notes",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Save now"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "S1",
+   "element": "S1",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "scroll", "direction": "down"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S5-nav",
+   "element": "S5",
+   "ground_truth": "none",
+   "start": "/",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Products"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"},
+     {"action": "click", "role": "link", "name": "Home"}
+    ],
+    "navigation": [],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S5-folder",
+   "element": "S5",
+   "ground_truth": "none",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Archive"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S5-tab",
+   "element": "S5",
+   "ground_truth": "none",
+   "start": "/settings",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Notifications"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Settings"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S5-page",
+   "element": "S5",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "link", "name": "Page 2"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S3-home",
+   "element": "S3",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "checkbox", "name": "Home"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S4-name",
+   "element": "S4",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "select", "role": "combobox", "name": "Sort by", "option": "Name"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "S2-row5",
+   "element": "S2",
+   "ground_truth": "none",
+   "start": "/inbox",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "More actions for Lunch on Friday?"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P2-reviews",
+   "element": "P2",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Reviews"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P2-description",
+   "element": "P2",
+   "ground_truth": "none",
+   "start": "/products/1",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Specs"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Description"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"},
+     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P5-message1",
+   "element": "P5",
+   "ground_truth": "none",
+   "start": "/inbox/1",
+   "setup": [],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Reply"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Q3 budget draft"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "P6-back",
+   "element": "P6",
+   "ground_truth": "none",
+   "start": "/checkout",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Continue"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Back"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Proceed to checkout"}
+    ],
+    "detour_length": 4,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "P8-cable",
+   "element": "P8",
+   "ground_truth": "none",
+   "start": "/products",
+   "setup": [],
+   "interaction": [
+    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "cable", "enter": true}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"},
+     {"action": "click", "role": "link", "name": "Todos"},
+     {"action": "click", "role": "link", "name": "Notes"},
+     {"action": "click", "role": "link", "name": "Support"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Products"}
+    ],
+    "detour_length": 5,
+    "suffix_length": 1
+   }
+  },
+  {
+   "id": "Q2-message1",
+   "element": "Q2",
+   "ground_truth": "none",
+   "start": "/inbox/1",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Reply"},
+    {"action": "fill", "role": "textbox", "name": "Reply text", "text": "Looks fine"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Preview"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Inbox", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Q3 budget draft"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  },
+  {
+   "id": "Q3-unclaimed",
+   "element": "Q3",
+   "ground_truth": "none",
+   "start": "/checkout",
+   "setup": [
+    {"action": "click", "role": "button", "name": "Continue"},
+    {"action": "fill", "role": "textbox", "name": "Coupon code", "text": "SAVE15"}
+   ],
+   "interaction": [
+    {"action": "click", "role": "button", "name": "Apply coupon"}
+   ],
+   "path": {
+    "detour": [
+     {"action": "click", "role": "link", "name": "Offers"},
+     {"action": "click", "role": "link", "name": "Orders"}
+    ],
+    "navigation": [
+     {"action": "click", "role": "link", "name": "Cart", "match": "contains"},
+     {"action": "click", "role": "link", "name": "Proceed to checkout"}
+    ],
+    "detour_length": 2,
+    "suffix_length": 0
+   }
+  }
+ ]
+}
