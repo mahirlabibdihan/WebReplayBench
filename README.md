@@ -16,6 +16,8 @@ deliberately unconventional: writes behind plain links (`GET`), writes from
 menu items, radios and autosaving fields, read-only `POST`s, no-op `PUT`s and
 `DELETE`s, and state kept in localStorage or cookies.
 
+![The Nimbus Market home page](docs/home.png)
+
 ## Ground truth
 
 | Source | What it records |
