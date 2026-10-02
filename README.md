@@ -304,3 +304,16 @@ site/                          the web app
 webreplaybench/                BrowserGym tasks, oracle client, evaluation, dataset loader
   data/                        the dataset (JSON): elements, tasks, scenarios, noise, site map
 ```
+
+## Citation
+
+WebReplayBench was introduced with WebOperator. If you use it, please cite:
+
+```bibtex
+@article{dihan2025weboperator,
+  title={WebOperator: Action-Aware Tree Search for Autonomous Agents in Web Environment},
+  author={Dihan, Mahir Labib and Hashem, Tanzima and Ali, Mohammed Eunus and Parvez, Md Rizwan},
+  journal={arXiv preprint arXiv:2512.12692},
+  year={2025}
+}
+```
