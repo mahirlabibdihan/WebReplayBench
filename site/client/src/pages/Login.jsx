@@ -17,7 +17,7 @@ export default function Login() {
   };
   return (
     <main className="login">
-      <h1>Sign in to Nimbus Market</h1>
+      <h1>Sign in to Acme Shop</h1>
       <form onSubmit={submit}>
         <label>Username <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" /></label>
         <label>Password <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" /></label>

@@ -92,7 +92,7 @@ export default function Product() {
       <div>
       <p className="eyebrow">{p.category}</p>
       <h1>{p.name}</h1>
-      <p className="meta"><strong className="price">{money(p.price_cents)}</strong> · {p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</p>
+      <p className="meta"><strong className="price">{money(p.price_cents)}</strong> · <span className={p.stock > 0 ? 'stock' : 'stock out'}>{p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</span></p>
       <div className="row">
         <label>Quantity{' '}
           <select value={qty} onChange={(e) => setQty(Number(e.target.value))} data-scenario="S8">

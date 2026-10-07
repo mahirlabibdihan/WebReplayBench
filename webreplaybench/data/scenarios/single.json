@@ -106,7 +106,7 @@
    "ground_truth": "server",
    "start": "/support",
    "setup": [
-    {"action": "fill", "role": "textbox", "name": "Subject", "text": "Damaged mug"},
+    {"action": "fill", "role": "textbox", "name": "Subject", "text": "Damaged vase"},
     {"action": "fill", "role": "textbox", "name": "Message", "text": "It arrived cracked."}
    ],
    "interaction": [
@@ -438,7 +438,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 2,
     "suffix_length": 0
@@ -451,7 +451,7 @@
    "start": "/cart",
    "setup": [],
    "interaction": [
-    {"action": "click", "role": "button", "name": "Decrease quantity of House Blend Coffee Beans"}
+    {"action": "click", "role": "button", "name": "Decrease quantity of Woven Storage Basket"}
    ],
    "cohort": 2,
    "path": {
@@ -620,7 +620,7 @@
    "start": "/cart",
    "setup": [],
    "interaction": [
-    {"action": "select", "role": "combobox", "name": "Quantity for Old Phone Case", "option": "3"}
+    {"action": "select", "role": "combobox", "name": "Quantity for Old Picture Frame", "option": "3"}
    ],
    "path": {
     "detour": [
@@ -800,7 +800,7 @@
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
      {"action": "click", "role": "link", "name": "Page 2"},
-     {"action": "click", "role": "link", "name": "Commuter Backpack"}
+     {"action": "click", "role": "link", "name": "Folding Bistro Table"}
     ],
     "detour_length": 3,
     "suffix_length": 0
@@ -959,7 +959,7 @@
    "start": "/products",
    "setup": [],
    "interaction": [
-    {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+    {"action": "click", "role": "link", "name": "Modern Chair"}
    ],
    "path": {
     "detour": [
@@ -1080,7 +1080,7 @@
    "ground_truth": "server",
    "start": "/inbox",
    "setup": [
-    {"action": "click", "role": "button", "name": "More actions for Flash sale: 40% off audio"}
+    {"action": "click", "role": "button", "name": "More actions for Flash sale: 40% off seating"}
    ],
    "interaction": [
     {"action": "click", "role": "menuitem", "name": "Archive"}
@@ -1118,7 +1118,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Summit Hiking Boots"}
+     {"action": "click", "role": "link", "name": "Teak Garden Bench"}
     ],
     "detour_length": 4,
     "suffix_length": 1
@@ -1237,7 +1237,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 1
@@ -1372,7 +1372,7 @@
    "start": "/products",
    "setup": [],
    "interaction": [
-    {"action": "click", "role": "checkbox", "name": "Electronics"}
+    {"action": "click", "role": "checkbox", "name": "Living Room"}
    ],
    "path": {
     "detour": [
@@ -1419,7 +1419,7 @@
    "ground_truth": "none",
    "start": "/products",
    "setup": [
-    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "mouse"}
+    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "chair"}
    ],
    "interaction": [
     {"action": "click", "role": "button", "name": "Search"}
@@ -1456,7 +1456,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 0
@@ -1504,7 +1504,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 1
@@ -1530,7 +1530,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 0
@@ -1556,7 +1556,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 0
@@ -1628,7 +1628,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 1
@@ -1641,7 +1641,7 @@
    "start": "/products",
    "setup": [],
    "interaction": [
-    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "mouse", "enter": true}
+    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "chair", "enter": true}
    ],
    "path": {
     "detour": [
@@ -2016,7 +2016,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 1
@@ -2100,7 +2100,7 @@
    "ground_truth": "none",
    "start": "/support",
    "setup": [
-    {"action": "fill", "role": "textbox", "name": "Subject", "text": "Damaged mug"},
+    {"action": "fill", "role": "textbox", "name": "Subject", "text": "Damaged vase"},
     {"action": "fill", "role": "textbox", "name": "Message", "text": "It arrived cracked."}
    ],
    "interaction": [
@@ -2322,7 +2322,7 @@
    "start": "/products",
    "setup": [],
    "interaction": [
-    {"action": "click", "role": "checkbox", "name": "Home"}
+    {"action": "click", "role": "checkbox", "name": "Decor"}
    ],
    "path": {
     "detour": [
@@ -2405,7 +2405,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 1
@@ -2431,7 +2431,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Aurora Wireless Mouse"}
+     {"action": "click", "role": "link", "name": "Modern Chair"}
     ],
     "detour_length": 4,
     "suffix_length": 0
@@ -2494,7 +2494,7 @@
    "start": "/products",
    "setup": [],
    "interaction": [
-    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "cable", "enter": true}
+    {"action": "fill", "role": "searchbox", "name": "Search products", "text": "cushion", "enter": true}
    ],
    "path": {
     "detour": [

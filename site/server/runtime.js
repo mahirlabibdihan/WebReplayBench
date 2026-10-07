@@ -16,7 +16,7 @@ let dripCount = 0;
 
 const DRIP_MESSAGES = [
   ['Calendar', 'Reminder: team sync at 3 pm', 'Your team sync starts at 3 pm in Room 4.'],
-  ['Promo Deals', 'Weekend offer inside', 'Save on outdoor gear this weekend.'],
+  ['Promo Deals', 'Weekend offer inside', 'Save on outdoor furniture this weekend.'],
   ['Sam Chen', 'Re: Lunch on Friday?', 'Works for me, see you then.'],
   ['IT Support', 'Scheduled maintenance', 'Email may be slow tonight between 1 and 2 am.'],
   ['Alex Rivera', 'Dinner plans', 'Thai or pizza tonight?'],

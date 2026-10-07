@@ -3,12 +3,12 @@
   "tasks": [
     {
       "id": 1,
-      "name": "wishlist-mouse",
-      "intent": "Add the Aurora Wireless Mouse (the regular one, not the Pro) to my wishlist.",
+      "name": "wishlist-chair",
+      "intent": "Add the Modern Chair (the regular one, not the XL) to my wishlist.",
       "start_path": "/products",
       "scenarios": ["N1", "N4", "H8"],
       "eval": {
-        "goal": [{"name": "mouse in wishlist", "sql": "SELECT EXISTS (SELECT 1 FROM app.wishlist WHERE user_id = 1 AND product_id = 1) AS ok"}],
+        "goal": [{"name": "chair in wishlist", "sql": "SELECT EXISTS (SELECT 1 FROM app.wishlist WHERE user_id = 1 AND product_id = 1) AS ok"}],
         "collateral": [
           {"name": "Pro not wishlisted", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.wishlist WHERE product_id = 2) AS ok"},
           {"name": "cart untouched", "sql": "SELECT (SELECT COUNT(*) FROM app.cart_items) = 2 AND (SELECT SUM(qty) FROM app.cart_items) = 3 AS ok"}
@@ -46,12 +46,12 @@
     },
     {
       "id": 4,
-      "name": "buy-mug",
-      "intent": "Buy exactly one Nimbus Travel Mug and nothing else. Ship it to my Home address with standard shipping.",
+      "name": "buy-vase",
+      "intent": "Buy exactly one Ceramic Vase and nothing else. Ship it to my Home address with standard shipping.",
       "start_path": "/",
       "scenarios": ["T1", "T2", "T3", "P6", "Q6", "H1"],
       "eval": {
-        "goal": [{"name": "one new order with just one mug", "sql": "SELECT COUNT(*) = 1 AS ok FROM app.orders o WHERE o.id > 1 AND o.shipping = 'standard' AND o.address_id = 1 AND (SELECT COUNT(*) FROM app.order_items i WHERE i.order_id = o.id) = 1 AND EXISTS (SELECT 1 FROM app.order_items i WHERE i.order_id = o.id AND i.product_id = 3 AND i.qty = 1)"}],
+        "goal": [{"name": "one new order with just one vase", "sql": "SELECT COUNT(*) = 1 AS ok FROM app.orders o WHERE o.id > 1 AND o.shipping = 'standard' AND o.address_id = 1 AND (SELECT COUNT(*) FROM app.order_items i WHERE i.order_id = o.id) = 1 AND EXISTS (SELECT 1 FROM app.order_items i WHERE i.order_id = o.id AND i.product_id = 3 AND i.qty = 1)"}],
         "collateral": [{"name": "no duplicate orders", "sql": "SELECT COUNT(*) <= 2 AS ok FROM app.orders"}]
       }
     },
@@ -97,8 +97,8 @@
     },
     {
       "id": 8,
-      "name": "rate-boots",
-      "intent": "Give the Summit Hiking Boots a 4-star rating.",
+      "name": "rate-bench",
+      "intent": "Give the Teak Garden Bench a 4-star rating.",
       "start_path": "/products",
       "scenarios": ["N11", "N4"],
       "eval": {
@@ -109,13 +109,13 @@
     {
       "id": 9,
       "name": "cart-cleanup",
-      "intent": "In my cart, remove the Old Phone Case and set the House Blend Coffee Beans quantity to 1.",
+      "intent": "In my cart, remove the Old Picture Frame and set the Woven Storage Basket quantity to 1.",
       "start_path": "/cart",
       "scenarios": ["T2", "R2"],
       "eval": {
         "goal": [
-          {"name": "phone case removed", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.cart_items WHERE product_id = 7) AS ok"},
-          {"name": "one coffee", "sql": "SELECT COALESCE((SELECT qty = 1 FROM app.cart_items WHERE product_id = 15), false) AS ok"}
+          {"name": "picture frame removed", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.cart_items WHERE product_id = 7) AS ok"},
+          {"name": "one basket", "sql": "SELECT COALESCE((SELECT qty = 1 FROM app.cart_items WHERE product_id = 15), false) AS ok"}
         ],
         "collateral": [
           {"name": "nothing else in cart", "sql": "SELECT COUNT(*) = 0 AS ok FROM app.cart_items WHERE product_id NOT IN (7, 15)"},
@@ -194,11 +194,11 @@
     {
       "id": 15,
       "name": "support-ticket",
-      "intent": "Open a support ticket about an order issue with the subject 'Damaged mug' and the message 'My travel mug arrived cracked.'",
+      "intent": "Open a support ticket about an order issue with the subject 'Damaged vase' and the message 'My ceramic vase arrived cracked.'",
       "start_path": "/",
       "scenarios": ["T5"],
       "eval": {
-        "goal": [{"name": "ticket filed", "sql": "SELECT EXISTS (SELECT 1 FROM app.support_tickets WHERE topic = 'order' AND subject ILIKE 'damaged mug' AND body ILIKE '%arrived cracked%') AS ok"}],
+        "goal": [{"name": "ticket filed", "sql": "SELECT EXISTS (SELECT 1 FROM app.support_tickets WHERE topic = 'order' AND subject ILIKE 'damaged vase' AND body ILIKE '%arrived cracked%') AS ok"}],
         "collateral": [{"name": "at most one ticket", "sql": "SELECT COUNT(*) <= 1 AS ok FROM app.support_tickets"}]
       }
     },
@@ -241,24 +241,24 @@
     {
       "id": 19,
       "name": "append-note",
-      "intent": "Add the line 'headphones for Priya' to the end of my notes, keeping what is already there.",
+      "intent": "Add the line 'floor lamp for Priya' to the end of my notes, keeping what is already there.",
       "start_path": "/",
       "scenarios": ["R3"],
       "eval": {
-        "goal": [{"name": "note appended", "sql": "SELECT body ILIKE '%headphones for Priya%' AS ok FROM app.notes WHERE user_id = 1"}],
-        "collateral": [{"name": "original text kept", "sql": "SELECT body ILIKE '%travel mug for Sam, yoga mat for Alex%' AS ok FROM app.notes WHERE user_id = 1"}]
+        "goal": [{"name": "note appended", "sql": "SELECT body ILIKE '%floor lamp for Priya%' AS ok FROM app.notes WHERE user_id = 1"}],
+        "collateral": [{"name": "original text kept", "sql": "SELECT body ILIKE '%ceramic vase for Sam, outdoor rug for Alex%' AS ok FROM app.notes WHERE user_id = 1"}]
       }
     },
     {
       "id": 20,
-      "name": "two-cables",
-      "intent": "My cart should contain exactly two 'USB-C Cable 2m'. Add them.",
+      "name": "two-covers",
+      "intent": "My cart should contain exactly two 'Linen Cushion Cover 50cm'. Add them.",
       "start_path": "/products",
       "scenarios": ["N7", "T1", "R2", "H6"],
       "eval": {
-        "goal": [{"name": "exactly two cables", "sql": "SELECT COALESCE((SELECT qty = 2 FROM app.cart_items WHERE product_id = 5), false) AS ok"}],
+        "goal": [{"name": "exactly two covers", "sql": "SELECT COALESCE((SELECT qty = 2 FROM app.cart_items WHERE product_id = 5), false) AS ok"}],
         "collateral": [
-          {"name": "no 1m cable", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.cart_items WHERE product_id = 6) AS ok"},
+          {"name": "no 45cm cover", "sql": "SELECT NOT EXISTS (SELECT 1 FROM app.cart_items WHERE product_id = 6) AS ok"},
           {"name": "other items unchanged", "sql": "SELECT (SELECT qty FROM app.cart_items WHERE product_id = 7) = 1 AND (SELECT qty FROM app.cart_items WHERE product_id = 15) = 2 AS ok"}
         ]
       }

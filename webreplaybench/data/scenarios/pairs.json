@@ -137,7 +137,7 @@
     ],
     "navigation": [
      {"action": "click", "role": "link", "name": "Products"},
-     {"action": "click", "role": "link", "name": "Summit Hiking Boots"}
+     {"action": "click", "role": "link", "name": "Teak Garden Bench"}
     ],
     "detour_length": 3,
     "suffix_length": 0

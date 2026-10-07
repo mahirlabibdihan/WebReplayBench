@@ -4,11 +4,12 @@ import { api, money } from '../api.js';
 import { useSummary } from '../App.jsx';
 import { t } from '../i18n.js';
 
-/** A decorative product image: a solid color chosen by the product id (hidden from assistive technology). */
+// One emoji per product id, as in the Acme Shop mockup of the WebOperator project page.
+const PICTURES = ['', '🪑', '🪑', '🏺', '🪵', '🛋️', '🛋️', '🖼️', '📚', '🛋️', '🧶', '💡', '🪴', '🍽️', '🕯️', '🧺', '🪑'];
+
+/** A decorative product image (hidden from assistive technology). */
 export function Thumb({ id, className = '' }) {
-  const hue = (id * 47) % 360;
-  const style = { background: `hsl(${hue} 55% 72%)` };
-  return <div className={`thumb ${className}`} style={style} aria-hidden="true" />;
+  return <div className={`thumb ${className}`} aria-hidden="true">{PICTURES[id] ?? ''}</div>;
 }
 
 export function WishlistLink({ product, next }) {
@@ -132,7 +133,7 @@ export default function Products() {
             <Thumb id={p.id} />
             <div className="card-body">
             <Link to={`/products/${p.id}`} className="card-title" data-scenario="N4">{p.name}</Link>
-            <div className="meta">{p.category} · <span className="price">{money(p.price_cents)}</span> · {p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</div>
+            <div className="meta">{p.category} · <span className="price">{money(p.price_cents)}</span> · <span className={p.stock > 0 ? 'stock' : 'stock out'}>{p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</span></div>
             <div className="row">
               <button type="button" onClick={() => addToCart(p)} data-scenario="T1">{t('Add to cart')}</button>
               <WishlistLink product={p} next={here} />

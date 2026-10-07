@@ -32,7 +32,7 @@ const office = settings.addresses.find((a) => a.label === 'Office');
 
 // [scenario, expectWrite, action]
 const cases = [
-  ['S-read', false, () => call('GET', '/api/products?q=mouse')],
+  ['S-read', false, () => call('GET', '/api/products?q=chair')],
   ['P3', false, () => call('GET', '/api/products/1/reviews?offset=3')],
   ['P4', false, () => call('GET', '/api/products/1/delivery?zip=12345')],
   ['Q1', false, () => call('POST', '/api/products/filter', { q: 'usb', maxPrice: 20 })],
@@ -68,7 +68,7 @@ const cases = [
   ['R5', true, () => call('PUT', '/api/settings/sms', { sms_alerts: false })],
   ['R6', true, () => call('PATCH', '/api/messages/5', { is_read: false })],
   ['T4', true, () => call('PUT', '/api/profile', { full_name: 'Jordan Lee', email: 'jordan.lee@example.test', phone: '555-0142' })],
-  ['T5', true, () => call('POST', '/support/tickets', 'topic=order&subject=Damaged+mug&body=Arrived+cracked', { contentType: 'application/x-www-form-urlencoded' })],
+  ['T5', true, () => call('POST', '/support/tickets', 'topic=order&subject=Damaged+vase&body=Arrived+cracked', { contentType: 'application/x-www-form-urlencoded' })],
   ['T7', true, () => call('DELETE', '/api/messages/10')],
   ['T8', true, () => call('POST', '/api/messages/1/reply', { body: 'Approved' })],
   ['T9', true, () => call('POST', '/api/todos', { title: 'Book dentist' })],

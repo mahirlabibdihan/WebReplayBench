@@ -30,7 +30,7 @@ export default function Home() {
   return (
     <>
       <div className="hero">
-        <p className="eyebrow">Nimbus Market</p>
+        <p className="eyebrow">Acme Shop</p>
         <h1>Welcome back</h1>
         <p>Pick up where you left off: your inbox, your cart and today's picks.</p>
       </div>

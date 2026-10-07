@@ -10,13 +10,13 @@ actions, and whether backtracking, replay or retries re-execute them.
 
 The benchmark is agent-independent: nothing in it assumes a particular agent.
 
-The app is "Nimbus Market", a signed-in account with a shop, inbox, todos,
+The app is "Acme Shop", a signed-in account with a shop, inbox, todos,
 notes, offers, support form and settings. Many of its interactions are
 deliberately unconventional: writes behind plain links (`GET`), writes from
 menu items, radios and autosaving fields, read-only `POST`s, no-op `PUT`s and
 `DELETE`s, and state kept in localStorage or cookies.
 
-![The Nimbus Market home page](docs/home.png)
+![The Acme Shop home page](docs/home.png)
 
 ## Setup
 

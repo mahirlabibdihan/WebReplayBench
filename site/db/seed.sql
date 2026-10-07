@@ -8,22 +8,22 @@ INSERT INTO settings (user_id, email_digest, sms_alerts, items_per_page, profile
     (1, 'daily', true, 12, false);
 
 INSERT INTO products (id, name, category, price_cents, stock, description, specs) VALUES
-    (1,  'Aurora Wireless Mouse',        'Electronics', 2499,  40, 'Compact 2.4 GHz wireless mouse with silent clicks.', 'DPI: 1600 | Battery: AA x1 | Weight: 78 g'),
-    (2,  'Aurora Wireless Mouse Pro',    'Electronics', 3999,  25, 'Ergonomic wireless mouse with 6 programmable buttons.', 'DPI: 4000 | Battery: USB-C rechargeable | Weight: 96 g'),
-    (3,  'Nimbus Travel Mug',            'Home',        1850,  60, 'Insulated 350 ml mug that keeps drinks hot for 6 hours.', 'Capacity: 350 ml | Material: steel | Lid: leak-proof'),
-    (4,  'Summit Hiking Boots',          'Outdoor',     12900, 15, 'Waterproof leather boots with a grippy outsole.', 'Sizes: 38-46 | Waterproof: yes | Weight: 1.1 kg'),
-    (5,  'USB-C Cable 2m',               'Electronics', 999,   120,'Braided USB-C to USB-C cable, 60 W.', 'Length: 2 m | Power: 60 W | Data: USB 2.0'),
-    (6,  'USB-C Cable 1m',               'Electronics', 749,   150,'Braided USB-C to USB-C cable, 60 W.', 'Length: 1 m | Power: 60 W | Data: USB 2.0'),
-    (7,  'Old Phone Case',               'Electronics', 1200,  8,  'Slim case for older phone models.', 'Material: TPU | Colour: black'),
-    (8,  'Mechanical Keyboard K2',       'Electronics', 8900,  20, 'Hot-swappable mechanical keyboard, brown switches.', 'Layout: 75% | Switches: brown | Backlight: white'),
-    (9,  'Noise-Cancelling Headphones',  'Electronics', 19900, 12, 'Over-ear headphones with adaptive noise cancelling.', 'Battery: 30 h | Bluetooth 5.3 | Weight: 250 g'),
-    (10, 'Cork Yoga Mat',                'Outdoor',     2900,  30, 'Non-slip natural cork yoga mat.', 'Size: 183 x 61 cm | Thickness: 4 mm'),
-    (11, 'Arc Desk Lamp',                'Home',        3400,  22, 'Dimmable LED desk lamp with USB port.', 'Brightness: 5 levels | Colour temp: 3000-6000 K'),
-    (12, 'Trail Water Bottle',           'Outdoor',     1500,  80, 'BPA-free 750 ml bottle with carry loop.', 'Capacity: 750 ml | Material: Tritan'),
-    (13, 'Commuter Backpack',            'Outdoor',     5900,  18, 'Water-resistant 20 L backpack with laptop sleeve.', 'Volume: 20 L | Laptop: up to 15 in'),
-    (14, 'Dot Grid Notebook Set',        'Home',        1100,  70, 'Three A5 dot-grid notebooks.', 'Pages: 120 each | Paper: 100 gsm'),
-    (15, 'House Blend Coffee Beans',     'Home',        1600,  45, 'Medium roast whole beans, 500 g.', 'Weight: 500 g | Roast: medium'),
-    (16, 'Pocket Bluetooth Speaker',     'Electronics', 4900,  33, 'Splash-proof speaker with 12 h battery.', 'Battery: 12 h | IPX5 | Weight: 210 g');
+    (1,  'Modern Chair',                 'Living Room', 2499,  40, 'Upholstered armchair with solid oak legs.', 'Seat height: 45 cm | Fabric: blue weave | Legs: oak'),
+    (2,  'Modern Chair XL',              'Living Room', 3999,  25, 'Wider armchair with a high back and lumbar cushion.', 'Seat height: 47 cm | Fabric: blue weave | Legs: oak'),
+    (3,  'Ceramic Vase',                 'Decor',       1850,  60, 'Hand-glazed 30 cm vase in matte white.', 'Height: 30 cm | Material: stoneware | Finish: matte'),
+    (4,  'Teak Garden Bench',            'Outdoor',     12900, 15, 'Weatherproof three-seat bench in solid teak.', 'Width: 150 cm | Material: teak | Seats: 3'),
+    (5,  'Linen Cushion Cover 50cm',     'Living Room', 999,   120,'Washed linen cushion cover with a hidden zip.', 'Size: 50 x 50 cm | Material: linen | Insert: not included'),
+    (6,  'Linen Cushion Cover 45cm',     'Living Room', 749,   150,'Washed linen cushion cover with a hidden zip.', 'Size: 45 x 45 cm | Material: linen | Insert: not included'),
+    (7,  'Old Picture Frame',            'Living Room', 1200,  8,  'Discontinued wooden frame for 10 x 15 cm photos.', 'Material: pine | Colour: black'),
+    (8,  'Walnut Bookshelf',             'Living Room', 8900,  20, 'Five-shelf bookcase in walnut veneer.', 'Height: 180 cm | Shelves: 5 | Width: 80 cm'),
+    (9,  'Velvet Loveseat',              'Living Room', 19900, 12, 'Two-seat velvet sofa with tapered legs.', 'Width: 140 cm | Fabric: velvet | Seats: 2'),
+    (10, 'Woven Outdoor Rug',            'Outdoor',     2900,  30, 'Reversible rug that dries quickly after rain.', 'Size: 180 x 120 cm | Material: polypropylene'),
+    (11, 'Arc Floor Lamp',               'Decor',       3400,  22, 'Dimmable arc lamp with a linen shade.', 'Height: 190 cm | Brightness: 5 levels | Bulb: E27'),
+    (12, 'Terracotta Planter',           'Outdoor',     1500,  80, 'Frost-resistant 25 cm planter with a drainage hole.', 'Diameter: 25 cm | Material: terracotta'),
+    (13, 'Folding Bistro Table',         'Outdoor',     5900,  18, 'Foldable round steel table for two.', 'Diameter: 60 cm | Material: steel | Folds: yes'),
+    (14, 'Scented Candle Set',           'Decor',       1100,  70, 'Three soy candles: cedar, fig and linen.', 'Burn time: 30 h each | Wax: soy'),
+    (15, 'Woven Storage Basket',         'Decor',       1600,  45, 'Seagrass basket with handles.', 'Size: 40 x 30 cm | Material: seagrass'),
+    (16, 'Round Accent Stool',           'Living Room', 4900,  33, 'Low upholstered stool that doubles as a side table.', 'Height: 42 cm | Fabric: boucle | Legs: oak');
 
 INSERT INTO reviews (product_id, author, stars, body)
 SELECT p.id, a.author, a.stars, a.body || ' (' || p.name || ')'
@@ -64,13 +64,13 @@ INSERT INTO order_items (order_id, product_id, qty, price_cents) VALUES
 INSERT INTO messages (id, user_id, sender, subject, body, sent_at, sort_key, is_read, is_starred) VALUES
     (1,  1, 'Priya Shah',     'Q3 budget draft',            'Hi Jordan, attached is the Q3 budget draft. Please review and reply with your approval or comments.', 'Sep 26', 114, false, false),
     (2,  1, 'IT Support',     'Your verification code',     'Use verification code 482913 to finish signing in. The code expires in 30 minutes.',                   'Sep 26', 113, false, false),
-    (3,  1, 'Promo Deals',    'Flash sale: 40% off audio',  'Headphones and speakers are 40% off for 24 hours only.',                                              'Sep 25', 112, false, false),
+    (3,  1, 'Promo Deals',    'Flash sale: 40% off seating',  'Loveseats and stools are 40% off for 24 hours only.',                                              'Sep 25', 112, false, false),
     (4,  1, 'Weekly Picks',   'This week''s top picks',     'Our editors picked five products you will love. Not interested? You can unsubscribe from Weekly Picks.', 'Sep 25', 111, false, false),
     (5,  1, 'Sam Chen',       'Lunch on Friday?',           'Are you free for lunch on Friday around 12:30?',                                                       'Sep 24', 110, true,  false),
     (6,  1, 'Promo Deals',    'Last chance: free shipping', 'Free shipping on every order ends tonight.',                                                          'Sep 24', 109, false, false),
     (7,  1, 'Priya Shah',     'Q2 budget final',            'The Q2 budget is final. No action needed.',                                                           'Sep 20', 108, true,  true),
     (8,  1, 'Alex Rivera',    'Trip photos',                'Uploaded the trip photos to the shared album.',                                                       'Sep 19', 107, true,  false),
-    (9,  1, 'Promo Deals',    'New arrivals just landed',   'Check out the new outdoor collection.',                                                               'Sep 18', 106, true,  false),
+    (9,  1, 'Promo Deals',    'New arrivals just landed',   'Check out the new outdoor furniture collection.',                                                               'Sep 18', 106, true,  false),
     (10, 1, 'IT Support',     'Password expiry notice',     'Your password will expire in 14 days.',                                                               'Sep 15', 105, true,  false),
     (11, 1, 'Billing',        'Receipt for order #1',       'Thanks for your order. Total: $33.98.',                                                               'Aug 14', 104, true,  false);
 
@@ -84,7 +84,7 @@ INSERT INTO todos (user_id, title, done) VALUES
     (1, 'Buy groceries',  true),
     (1, 'Call plumber',   false);
 
-INSERT INTO notes (user_id, body) VALUES (1, 'Gift ideas: travel mug for Sam, yoga mat for Alex.');
+INSERT INTO notes (user_id, body) VALUES (1, 'Gift ideas: ceramic vase for Sam, outdoor rug for Alex.');
 
 -- Keep sequences past the explicit ids.
 SELECT setval('app.users_id_seq',     (SELECT MAX(id) FROM app.users));

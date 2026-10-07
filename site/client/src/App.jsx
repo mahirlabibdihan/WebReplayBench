@@ -66,7 +66,7 @@ function Header({ summary }) {
   return (
     <header className="site-header">
       <div className="bar">
-        <div className="brand"><span className="brand-mark" aria-hidden="true" />Nimbus Market</div>
+        <div className="brand"><span className="brand-mark" aria-hidden="true" />Acme Shop</div>
         <nav aria-label="Main">
           {nav.map(([to, label, count]) => (
             <NavLink key={to} to={to} end={to === '/'} data-scenario="S5">
